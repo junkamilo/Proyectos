@@ -1,0 +1,37 @@
+{
+  "productos": [
+    {
+      "id": "e4ac",
+      "Nombre": "marrano",
+      "Tamaño": "Mediano",
+      "Precio": 10000,
+      "Cantidad": 3
+    }
+  ],
+  "Especificaciones": {
+    "Tamaño": [
+      "Grande",
+      "Mediano",
+      "Pequeño"
+    ],
+    "Precio": [
+      5000,
+      10000,
+      20000,
+      40000,
+      50000
+    ],
+    "Cantidad": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  }
+}
