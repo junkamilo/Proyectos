@@ -1,9 +1,12 @@
-import formulario from "./components/form";
+import './style.css';
+
+
+import contentName from "./components/IniciarSesion/contentName";
+import formLogin from "./components/IniciarSesion/formLogin";
 
 const app = document.getElementById("app");
 
-//instanciamos el formulario
-const form = await formulario();
+const Name = contentName();
+const formlogin = formLogin();
 
-//lo pegamos a su elemento padre
-app.append(form);
+app.append(Name,formlogin);
