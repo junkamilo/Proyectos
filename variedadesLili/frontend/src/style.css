@@ -42,3 +42,40 @@ body {
     animation: gradient-shift 5s ease infinite;
   }
 }
+
+
+
+/* --------- HEADER ------------ */
+/* --- Estilos del Header y Menú Hamburguesa --- */
+@layer components {
+  /* Define los estilos del menú desplegable.
+    Por defecto está oculto, escalado y sin opacidad.
+  */
+  .hamburgerMenu {
+    @apply absolute top-12 right-0 w-56 bg-white shadow-xl rounded-lg border border-slate-200 z-50
+           opacity-0 scale-95 -translate-y-2 transform 
+           transition-all duration-200 ease-out 
+           pointer-events-none; /* Evita clics cuando está oculto */
+  }
+
+  /* Define el estado 'activo' que el JS aplicará.
+    Lo hace visible, lo escala a 100% y lo posiciona.
+  */
+  .menuActivo {
+    @apply opacity-100 scale-100 translate-y-0 pointer-events-auto;
+  }
+
+  /*
+    Animación de las líneas del botón hamburguesa.
+    El JS aplicará 'menuActivo' al 'button' (no solo al 'menu').
+  */
+  .hamburgerBtn.menuActivo .line-1 {
+    @apply translate-y-2 rotate-45;
+  }
+  .hamburgerBtn.menuActivo .line-2 {
+    @apply opacity-0;
+  }
+  .hamburgerBtn.menuActivo .line-3 {
+    @apply -translate-y-2 -rotate-45;
+  }
+}
