@@ -1,16 +1,10 @@
+import { router } from './router/routers';
 import './style.css';
-
-
-import contentName from "./components/IniciarSesion/contentName";
-import formLogin from "./components/IniciarSesion/formLogin";
-import header from './components/header/header';
-import main from './components/menuPrincipal/main';
 
 const app = document.getElementById("app");
 
-//const Name = contentName();
-//const formlogin = formLogin();
-const headerMain = header();
-const contentMain = main();
+// Ejecuta router al cargar
+router(app);
 
-app.append(headerMain,contentMain);
+// Vuelve a ejecutar router cuando cambie la ruta
+window.addEventListener("hashchange", () => router(app));
