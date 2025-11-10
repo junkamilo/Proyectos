@@ -3,7 +3,7 @@ import logoTitulo from "./logoTitulo";
 import menuHamburguesa from "./menuHamburguesa";
 import search from "./search";
 
-const header = () => {
+export const header = () => {
   // Instanciamos los componentes
   const perfilUSer = logoPerfil();
   const menHamburguesa = menuHamburguesa();
@@ -42,6 +42,5 @@ const header = () => {
   headerContent.append(navWrapper);
 
   return headerContent;
-};
 
-export default header;
+};
