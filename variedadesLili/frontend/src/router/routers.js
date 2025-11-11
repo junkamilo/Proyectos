@@ -1,11 +1,54 @@
+import { estaAutenticado } from "../helpers/auth";
 import { loadView } from "../helpers/loadView";
+import { AgregarProductosController } from "../views/AgregarProductos/AgregarProductosController";
+import { AgregarUserController } from "../views/AgregarUser/AgregarUserController";
+import { EliminarProductosController } from "../views/EliminarProductos/EliminarProductosController";
 import { inicioController } from "../views/Inicio/inicioController";
+import { InventarioController } from "../views/Inventario/InventarioController";
+import { menuPrincipalController } from "../views/MenuPrincipal/menuPrincipalController";
+import { ModificarProductosController } from "../views/ModificarProductos/ModificarProductosController";
+import { PedidosController } from "../views/Pedidos/PedidosController";
 
 const routes = {
   "/": {
     template: "Inicio/inicio.html",
     controlador: inicioController,
     private: false,
+  },
+  MenuPrincipal: {
+    template: "MenuPrincipal/menuPrincipal.html",
+    controlador: menuPrincipalController,
+    private: true,
+  },
+  AgregarProductos: {
+    template: "AgregarProductos/AgregarProductos.html",
+    controlador: AgregarProductosController,
+    private: true,
+  },
+  AgregarUser: {
+    template: "AgregarUser/AgregarUser.html",
+    controlador: AgregarUserController,
+    private: true,
+  },
+  EliminarProductos: {
+    template: "EliminarProductos/EliminarProductos.html",
+    controlador: EliminarProductosController,
+    private: true,
+  },
+  Inventario: {
+    template: "Inventario/Inventario.html",
+    controlador: InventarioController,
+    private: true,
+  },
+  ModificarProductos: {
+    template: "ModificarProductos/ModificarProductos.html",
+    controlador: ModificarProductosController,
+    private: true,
+  },
+  Pedidos: {
+    template: "Pedidos/Pedidos.html",
+    controlador: PedidosController,
+    private: true,
   },
 };
 

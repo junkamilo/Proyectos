@@ -1,32 +1,34 @@
-const AgregarProductos = () => {
+export const AgregarUser = () => {
   const card = document.createElement("div");
-  card.className ="cardAgregarProducto flex flex-col h-full bg-white rounded-xl shadow-lg border border-slate-200 p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1";
+  card.className =
+    "cardAgregarProducto flex flex-col h-full bg-white rounded-xl shadow-lg border border-slate-200 p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1";
 
   const icon = document.createElement("div");
-  icon.className ="cardIcon w-14 h-14 rounded-full flex items-center justify-center bg-green-100";
+  icon.className =
+    "cardIcon w-14 h-14 rounded-full flex items-center justify-center bg-green-100";
 
   const img = document.createElement("img");
   img.src = "./assets/agregar.png";
-  img.alt = "Agregar producto";
+  img.alt = "Agregar Nuevo Usuario";
   img.className = "cardIconImg w-8 h-8 object-contain";
   icon.append(img);
 
   // Título
   const title = document.createElement("h3");
-  title.textContent = "Agregar Producto";
+  title.textContent = "Agregar Usuario";
   title.className = "cardTitle mt-4 text-xl font-semibold text-slate-900";
 
   // Descripción
   const desc = document.createElement("p");
-  desc.textContent = "Añade nuevos productos al inventario.";
+  desc.textContent = "Añade nuevos Usuario";
   desc.className = "cardDesc mt-1 text-sm text-slate-600 flex-grow";
 
   // Botón
   const button = document.createElement("button");
-  button.textContent = "Agregar";
+  button.textContent = "Añadir";
   button.className ="cardBtn mt-4 w-full py-2 px-4 rounded-md text-sm font-medium text-center transition-colors duration-200 bg-green-50 text-green-700 hover:bg-green-100";
   button.addEventListener("click",()=>{
-    window.location.hash = "#AgregarProductos";
+    window.location.hash = "#AgregarUser";
   });
 
   // Estructura
@@ -34,5 +36,3 @@ const AgregarProductos = () => {
 
   return card;
 };
-
-export default AgregarProductos;

@@ -40,8 +40,10 @@ const card = document.createElement("div");
   // Estilo: 'mt-4', 'w-full', padding, fuente, redondeado
   // Color: Verde (funcional) con hover
   // Interacción: 'transition-colors'
-  button.className =
-    "cardBtn mt-4 w-full py-2 px-4 rounded-md text-sm font-medium text-center transition-colors duration-200 bg-green-50 text-green-700 hover:bg-green-100";
+  button.className ="cardBtn mt-4 w-full py-2 px-4 rounded-md text-sm font-medium text-center transition-colors duration-200 bg-green-50 text-green-700 hover:bg-green-100";
+  button.addEventListener("click",()=>{
+    window.location.hash = "#EliminarProductos";
+  });
 
   // Estructura
   card.append(icon, title, desc, button);

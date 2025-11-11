@@ -1,4 +1,5 @@
 import AgregarProductos from "./AgregarProductos";
+import { AgregarUser } from "./AgregarUser";
 import ComprasPedidos from "./ComprasPedidos";
 import EliminarProductos from "./EliminarProductos";
 import Inventario from "./Inventario";
@@ -11,8 +12,9 @@ const main = () => {
   const deleteProduct = EliminarProductos();
   const inventarioProductos = Inventario();
   const pedidos = ComprasPedidos();
+  const nuevoUser = AgregarUser();
 
-  const container = document.createElement("main");
+  const container = document.createElement("div");
   // --- Clases de Tailwind Aplicadas (Main) ---
   // Layout: Ancho máximo y centrado (igual que el header), padding horizontal
   // Padding vertical 'py-8' para dar espacio debajo del header 'sticky'
@@ -42,7 +44,8 @@ const main = () => {
     editarProduc,
     deleteProduct,
     inventarioProductos,
-    pedidos
+    pedidos,
+    nuevoUser
   );
 
   container.append(title, content);
