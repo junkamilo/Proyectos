@@ -1,7 +1,3 @@
-// responseProvider.js
-import logger from "./logger";
-import Sentry from "@sentry/node";
-
 export class ResponseProvider {
   static success(res, data, message = "Operación exitosa", meta = null) {
     const payload = { status: "success", message, data };
@@ -35,8 +31,7 @@ export class ResponseProvider {
 
   static error(res, err, options = {}) {
     const code = options.code || "INTERNAL_ERROR";
-    logger.error({ err, code, path: options.path || "" });
-    if (process.env.SENTRY_DSN) Sentry.captureException(err);
+    console.error("[ERROR]", { err, code, path: options.path || "" });
 
     const message =
       process.env.NODE_ENV === "production"

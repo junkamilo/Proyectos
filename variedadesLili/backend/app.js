@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import connection from "./utils/db.js";
+
+//rutas
+import RoutesAdminUsuario from './src/routes/RoutesAdminUsuario.js';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -13,21 +15,10 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // IMPORTANTE para recibir JSON
 
-// ✅ Ruta para probar la conexión DB
-// app.get("/test-db", async (req, res) => {
-//   try {
-//     const [rows] = await connection.query("SELECT 1 + 1 AS resultado");
-//     res.json({
-//       ok: true,
-//       resultado: rows[0].resultado,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       ok: false,
-//       error: err.message,
-//     });
-//   }
-// });
+
+// Rutas del resto de módulos
+app.use('/User', RoutesAdminUsuario);
+
 
 // Puerto y arranque del servidor
 const PORT = process.env.PORT || 3000;
