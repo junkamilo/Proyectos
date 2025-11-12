@@ -1,9 +1,13 @@
 import formulario from "../../components/AgregarProducto/form";
+import { addForm } from "../../helpers/helpersAgregarProducto/addForm";
 
 export const AgregarProductosController =  () => {
   const content = document.querySelector(".containerForm");
-  const formularioProducs = formulario();
+  const { container, form, groups } = formulario();
 
-  content.append(formularioProducs);
+  content.append(container);
+
+  addForm(form, groups);
+
   return content
 }
