@@ -1,4 +1,5 @@
-import { ResponseProvider } from "../providers/ResponseProvider.js";
+
+import { ResponseProvider } from "../providers/responseProvider.js";
 import { ServiceAdminUsuario } from "../services/ServiceAdminUsuario.js";
 
 export class ControllerAdminUsuario {
