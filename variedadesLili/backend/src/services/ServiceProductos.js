@@ -47,4 +47,25 @@ export class ServiceProductos {
       };
     }
   }
+  static async GetAllProductosService() {
+    try {
+      const productos = await Productos.GetAllProductos();
+
+      return {
+        error: false,
+        code: 200,
+        message: "Productos obtenidos correctamente",
+        data: productos,
+      };
+    } catch (error) {
+      console.error("[ServiceProductos:GetAllProductosService] Error:", error);
+
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al obtener los productos",
+        details: process.env.NODE_ENV === "development" ? error.message : null,
+      };
+    }
+  }
 }

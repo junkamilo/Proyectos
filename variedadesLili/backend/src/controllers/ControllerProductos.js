@@ -28,4 +28,23 @@ export class ControllerProductos {
       return ResponseProvider.error(res, "Error en el servidor", 500);
     }
   };
+  static GetAllProductos = async (req, res) => {
+    try {
+      const response = await ServiceProductos.GetAllProductosService();
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      console.error("[ControllerProductos:GetAllProductos] Error:", error);
+      return ResponseProvider.error(res, "Error en el servidor", 500);
+    }
+  };
 }
