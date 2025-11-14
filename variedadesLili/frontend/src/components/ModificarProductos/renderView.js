@@ -1,6 +1,22 @@
 import { renderEdit } from "./renderEdit.js";
 
+import { renderEdit } from "./renderEdit.js";
+
 export const renderView = (product, detailContent) => {
+  // 🔥 ADAPTAMOS DIRECTO LAS PROPIEDADES
+  product = {
+    id: product.id_producto,
+    nombre: product.nombre_producto,
+    imagen: `http://localhost:3000${product.url_foto_producto}`,
+    cantidad: product.cantidad,
+    descripcion: product.descripcion,
+    precio: product.precio,
+    tamaño: product.tamano,
+    tipo: product.categoria,
+    material: product.material,
+    estado: product.estado,
+  };
+
   detailContent.innerHTML = ""; // Limpiamos contenido
 
   // --- Imagen Grande (Vista) ---
@@ -18,8 +34,8 @@ export const renderView = (product, detailContent) => {
   const statusLabel = document.createElement("span");
   statusLabel.textContent = product.estado;
   let labelColor = "bg-gray-800";
-  if (product.estado === "Activo") labelColor = "bg-green-600";
-  if (product.estado === "Agotado") labelColor = "bg-red-600";
+  if (product.estado === "activo") labelColor = "bg-green-600";
+  if (product.estado === "agotado") labelColor = "bg-red-600";
   statusLabel.className = `absolute top-2 right-2 text-white text-xs font-bold px-2 py-1 rounded shadow-sm ${labelColor}`;
 
   imgContainer.append(detailImg, statusLabel);

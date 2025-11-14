@@ -1,8 +1,8 @@
 import { TablaInventario } from "../../components/ModificarProductos/Tabla.js";
 
-export const ModificarProductosController = () => {
+export const ModificarProductosController = async () => {
   const content = document.querySelector(".containerInventario");
-  const tablaInfo = TablaInventario();
+  const tablaInfo = await TablaInventario();
 
   content.append(tablaInfo);
 
