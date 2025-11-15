@@ -68,4 +68,102 @@ export class ServiceProductos {
       };
     }
   }
+  static async UpdateProductoService(data) {
+    try {
+      if (!data.id_producto) {
+        return {
+          error: true,
+          code: 400,
+          message: "El 'id_producto' es obligatorio para actualizar.",
+        };
+      }
+
+      const camposObligatorios = [
+        "nombre_producto",
+        "cantidad",
+        "descripcion",
+        "precio",
+        "tamano",
+        "categoria",
+        "material",
+        "estado",
+      ];
+
+      for (const campo of camposObligatorios) {
+        if (data[campo] === undefined || data[campo] === null) {
+          return {
+            error: true,
+            code: 400,
+            message: `El campo '${campo}' es obligatorio.`,
+          };
+        }
+      }
+
+      // url_foto_producto puede venir vacío → NO la borramos
+      const urlFinal = data.url_foto_producto
+        ? data.url_foto_producto
+        : undefined;
+
+      const actualizado = await Productos.UpdateProductos(
+        data.id_producto,
+        data.nombre_producto,
+        urlFinal,
+        data.cantidad,
+        data.descripcion,
+        data.precio,
+        data.tamano,
+        data.categoria,
+        data.material,
+        data.estado
+      );
+
+      if (!actualizado.updated) {
+        return {
+          error: true,
+          code: 400,
+          message: "No se pudo actualizar el producto.",
+        };
+      }
+
+      return {
+        error: false,
+        code: 200,
+        message: "Producto actualizado correctamente",
+        data: actualizado,
+      };
+    } catch (error) {
+      console.error("[ServiceProductos:UpdateProductoService] Error:", error);
+
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al actualizar el producto",
+        details: process.env.NODE_ENV === "development" ? error.message : null,
+      };
+    }
+  }
+  static async DeleteProductoService(id_producto) {
+    try {
+      const response = await Productos.DeleteProducto(id_producto);
+      if (!response.deleted) {
+        return {
+          error: true,
+          message: "No se pudo eliminar el producto",
+          code: "NOT_FOUND",
+        };
+      }
+
+      return {
+        error: false,
+        message: "Producto eliminado correctamente",
+      };
+    } catch (err) {
+      console.error("[ServiceProductos:DeleteProductoService] Error:", err);
+      return {
+        error: true,
+        message: "Error interno al eliminar el producto",
+        code: "INTERNAL_ERROR",
+      };
+    }
+  }
 }

@@ -4,9 +4,18 @@ import { upload } from "../middlewares/multer/uploadMiddleware.js";
 
 const router = express.Router();
 
-// Middleware de Multer (el campo debe coincidir con el `name` del input file)
-router.post("/productos", upload.single("foto_producto"), ControllerProductos.AddProducto);
-//traemos todos los productos agregados
-router.get("/GetAllproductos", ControllerProductos.GetAllProductos);
+// Obtener todos los productos
+router.get("/productos", ControllerProductos.GetAllProductos);
+
+// Crear un producto nuevo
+router.post("/productos",upload.single("foto_producto"),ControllerProductos.AddProducto
+);
+
+// Actualizar un producto existente
+router.put("/productos/:id",upload.single("foto_producto"),ControllerProductos.UpdateProducto
+);
+
+router.delete("/productos/:id", ControllerProductos.DeleteProducto);
+
 
 export default router;
