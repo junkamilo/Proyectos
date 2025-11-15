@@ -2,7 +2,7 @@ import { CabeceraThead } from "./CabeceraThead";
 import { CuerpoTbodyTabla } from "./CuerpoTbodyTabla";
 import { headerTabla } from "./headerTabla";
 
-export const TablaInventario = (productos = []) => {
+export const TablaEliminarProducto = async (productos = []) => {
   // Contenedor principal (tabla + panel de detalles)
   const mainContainer = document.createElement("div");
   mainContainer.className =
@@ -29,7 +29,7 @@ export const TablaInventario = (productos = []) => {
   const thead = CabeceraThead();
 
   // Cuerpo de la tabla + sección de detalles del producto
-  const { tbody, productDetailSection } = CuerpoTbodyTabla(productos);
+  const { tbody, productDetailSection } = await CuerpoTbodyTabla(productos);
 
   // Ensamblado final de la tabla
   table.append(thead, tbody);

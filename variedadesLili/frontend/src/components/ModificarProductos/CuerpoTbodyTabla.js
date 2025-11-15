@@ -5,7 +5,6 @@ import { AsideRenderizadoDetalles } from "./AsideRenderizadoDetalles";
 export const CuerpoTbodyTabla = async (productos = []) => {
   const response = await getAllProductosServices();
   const dataProductos = response.data || [];
-  console.log(dataProductos);
 
   const tbody = document.createElement("tbody");
   tbody.className = "text-sm text-slate-700 divide-y divide-slate-200";

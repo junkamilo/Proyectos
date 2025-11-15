@@ -76,7 +76,6 @@ export const router = async (app) => {
   await loadView(app, rutas.template);
   // Ejecutar el controldor
   rutas.controlador(params);
-  console.log("Controlador recibe params:", params);
 };
 
 const matchRoute = (hash) => {
@@ -100,9 +99,6 @@ const matchRoute = (hash) => {
         return true;
       }
     });
-
-    console.log("Ruta coincidida:", route);
-    console.log("Parámetros detectados:", params);
     if (matched) {
       return [routes[route], params];
     }

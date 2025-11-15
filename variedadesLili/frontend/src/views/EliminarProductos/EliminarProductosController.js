@@ -1,8 +1,8 @@
-import { TablaInventario } from "../../components/EliminarProducto/Tabla";
+import { TablaEliminarProducto } from "../../components/EliminarProducto/Tabla";
 
-export const EliminarProductosController = () => {
+export const EliminarProductosController = async () => {
   const content = document.querySelector(".containerEliminar");
-  const tablaInfo = TablaInventario();
+  const tablaInfo = await TablaEliminarProducto();
 
   content.append(tablaInfo);
 

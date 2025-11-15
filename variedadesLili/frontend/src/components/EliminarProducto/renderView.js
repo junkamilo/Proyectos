@@ -1,11 +1,12 @@
-import { renderEdit } from "./renderEdit.js";
+import { deleteProductoService } from "../../services/Productos/productosServices";
 
 export const renderView = (product, detailContent) => {
   // 🔥 ADAPTAMOS DIRECTO LAS PROPIEDADES
   product = {
     id_producto: product.id_producto,
     nombre: product.nombre_producto,
-    imagen: product.imagen ?? `http://localhost:3000${product.url_foto_producto}`,
+    imagen:
+      product.imagen ?? `http://localhost:3000${product.url_foto_producto}`,
     cantidad: product.cantidad,
     descripcion: product.descripcion,
     precio: product.precio,
@@ -60,7 +61,6 @@ export const renderView = (product, detailContent) => {
     detailList.append(div);
   };
 
-
   addDetailItem("Nombre", product.nombre, true);
   addDetailItem("ID", `#${product.id_producto}`);
   addDetailItem("Precio", `$${Number(product.precio).toLocaleString()}`);
@@ -87,16 +87,30 @@ export const renderView = (product, detailContent) => {
   const detailActions = document.createElement("div");
   detailActions.className = "flex gap-3 mt-6 pt-4 border-t border-slate-200";
 
-  const btnEditar = document.createElement("button");
-  btnEditar.textContent = "Editar Información";
-  btnEditar.className =
+  const btnEliminar = document.createElement("button");
+  btnEliminar.textContent = "Eliminar Producto";
+  btnEliminar.className =
     "flex-1 py-2 rounded-md bg-pink-600 text-white font-semibold shadow-md hover:bg-pink-700 hover:-translate-y-0.5 transition-all";
 
   // EVENTO CLAVE: Cambiar a Modo Edición
-  btnEditar.addEventListener("click", () => {
-    renderEdit(product, detailContent);
+  btnEliminar.addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    const confirmar = confirm(
+      `¿Seguro que deseas eliminar "${product.nombre}"?`
+    );
+    if (!confirmar) return;
+
+    try {
+      await deleteProductoService(product.id_producto);
+
+      alert("Producto eliminado correctamente");
+      //renderTablaProductos(); // actualiza la vista
+    } catch (error) {
+      alert(error.message);
+    }
   });
 
-  detailActions.append(btnEditar);
+  detailActions.append(btnEliminar);
   detailContent.append(detailActions);
 };

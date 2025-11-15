@@ -1,3 +1,4 @@
+import { updateProductoService } from "../../services/Productos/productosServices.js";
 import { renderView } from "./renderView.js";
 
 export const renderEdit = (product, detailContent) => {
@@ -17,13 +18,16 @@ export const renderEdit = (product, detailContent) => {
   labelImg.textContent = "URL de la Imagen";
   labelImg.className = "text-xs font-bold text-slate-500 uppercase";
   const inputImg = document.createElement("input");
-  inputImg.type = "text";
-  inputImg.value = product.imagen;
+  inputImg.type = "file";
+  inputImg.accept = "image/*";
   inputImg.className =
     "w-full mt-1 px-3 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent";
 
   // Actualizar preview al cambiar url
-  inputImg.addEventListener("input", (e) => (imgPreview.src = e.target.value));
+  inputImg.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) imgPreview.src = URL.createObjectURL(file);
+  });
 
   imgGroup.append(imgPreview, labelImg, inputImg);
   form.append(imgGroup);
@@ -130,21 +134,56 @@ export const renderEdit = (product, detailContent) => {
   });
 
   // Guardar:
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    // AQUÍ ACTUALIZARÍAMOS EL OBJETO (Simulación)
-    product.nombre = nameGroup.input.value;
-    product.precio = Number(priceGroup.input.value);
-    product.cantidad = Number(stockGroup.input.value);
-    product.tipo = typeGroup.input.value;
-    product.material = materialGroup.input.value;
-    product.tamaño = sizeGroup.input.value;
-    product.estado = stateSelect.value;
-    product.descripcion = descInput.value;
-    product.imagen = inputImg.value;
 
-    alert("¡Producto actualizado correctamente!");
-    renderView(product, detailContent);
+    try {
+      // Armamos FormData correctamente (esto es lo único que se envía al backend)
+      const formData = new FormData();
+
+      formData.append("nombre_producto", nameGroup.input.value);
+      formData.append("precio", priceGroup.input.value);
+      formData.append("cantidad", stockGroup.input.value);
+      formData.append("categoria", typeGroup.input.value);
+      formData.append("material", materialGroup.input.value);
+      formData.append("tamano", sizeGroup.input.value);
+      formData.append("estado", stateSelect.value);
+      formData.append("descripcion", descInput.value);
+
+      // Añadir archivo SOLO si el usuario seleccionó uno
+      if (inputImg.files[0]) {
+        formData.append("foto_producto", inputImg.files[0]);
+      }
+
+      // Llamamos al servicio que hace el PUT
+      const response = await updateProductoService(
+        product.id_producto,
+        formData
+      );
+
+      // Actualizamos la vista localmente
+      product = {
+        ...product,
+        id_producto: product.id_producto,
+        nombre: nameGroup.input.value,
+        precio: Number(priceGroup.input.value),
+        cantidad: Number(stockGroup.input.value),
+        tipo: typeGroup.input.value,
+        material: materialGroup.input.value,
+        tamaño: sizeGroup.input.value,
+        estado: stateSelect.value,
+        descripcion: descInput.value,
+        imagen: inputImg.files[0]
+          ? URL.createObjectURL(inputImg.files[0])
+          : product.imagen,
+      };
+
+      alert("¡Producto actualizado correctamente!");
+      renderView(product, detailContent);
+    } catch (err) {
+      console.error(err);
+      alert("Hubo un error al actualizar el producto");
+    }
   });
 
   actionDiv.append(btnCancel, btnSave);

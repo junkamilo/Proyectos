@@ -29,6 +29,6 @@ export const AsideDetallesProductos = () => {
 
   return {
     productDetailSection,
-    detailContent
+    detailContent,
   };
 };
