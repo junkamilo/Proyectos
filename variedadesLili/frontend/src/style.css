@@ -1,14 +1,41 @@
 @import "tailwindcss";
 
-/* --- Estilos Globales --- */
-body {
-  /* Fondo moderno y profesional, y suavizado de fuentes */
-  @apply bg-slate-100 text-slate-800 antialiased;
+/*
+ ---------------------------------------------------------------------------
+  CAPA BASE: Estilos fundamentales (body, #app, dark mode)
+ ---------------------------------------------------------------------------
+*/
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    /* Paleta principal (No-blanca) según los requisitos.
+      Define el fondo degradado para light mode (default) y dark mode.
+    */
+    @apply bg-gradient-to-b from-slate-50 to-slate-200 text-slate-800 antialiased
+           dark:from-slate-900 dark:to-slate-950 dark:text-slate-200;
+  }
+
+  #app {
+    /* Layout principal de la SPA.
+      Apila los componentes (Header, Main, Footer) verticalmente
+      y asegura que ocupe al menos toda la altura de la pantalla.
+    */
+    @apply flex min-h-screen flex-col;
+  }
 }
 
-/* --- Animaciones de Keyframes Personalizadas --- */
+/*
+ ---------------------------------------------------------------------------
+  CAPA UTILIDADES: Animaciones personalizadas y 'reduced-motion'
+ ---------------------------------------------------------------------------
+*/
 @layer utilities {
-  /* Animación para el logo: un pulso suave */
+  /* --- Definición de Keyframes --- */
+
+  /* Pulso suave para logos o elementos destacados */
   @keyframes pulse-slow {
     0%,
     100% {
@@ -16,15 +43,12 @@ body {
       opacity: 1;
     }
     50% {
-      transform: scale(1.05); /* Un sutil "latido" */
+      transform: scale(1.05); /* Pulso sutil */
       opacity: 0.95;
     }
   }
-  .animate-pulse-slow {
-    animation: pulse-slow 3s ease-in-out infinite;
-  }
 
-  /* Animación para el título: un degradado que se mueve */
+  /* Movimiento de degradado para títulos */
   @keyframes gradient-shift {
     0% {
       background-position: 0% 50%;
@@ -36,38 +60,64 @@ body {
       background-position: 0% 50%;
     }
   }
+
+  /* --- Clases de utilidad para aplicar animaciones --- */
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
   .animate-gradient-shift {
-    /* El tamaño del fondo debe ser más grande que el contenedor para que el degradado pueda moverse */
-    background-size: 200% 200%;
+    background-size: 200% 200%; /* Necesario para que el degradado se mueva */
     animation: gradient-shift 5s ease infinite;
+  }
+
+  /* Requisito: Respetar 'prefers-reduced-motion'.
+    Desactiva animaciones personalizadas si el usuario lo solicita.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse-slow,
+    .animate-gradient-shift {
+      animation: none;
+    }
+    
+    /* Opcional: anular transiciones de Tailwind si se requiere */
+    /*
+    .transition-all,
+    .transition {
+      transition: none;
+    }
+    */
   }
 }
 
-
-
-/* --------- HEADER ------------ */
-/* --- Estilos del Header y Menú Hamburguesa --- */
+/*
+ ---------------------------------------------------------------------------
+  CAPA COMPONENTES: Clases de componentes (Ej. Menú Hamburguesa)
+ ---------------------------------------------------------------------------
+*/
 @layer components {
-  /* Define los estilos del menú desplegable.
-    Por defecto está oculto, escalado y sin opacidad.
+  /* Estilos del menú desplegable (Oculto por defecto).
+    Usamos 'bg-white' como acento (permitido), con su variante dark.
   */
   .hamburgerMenu {
-    @apply absolute top-12 right-0 w-56 bg-white shadow-xl rounded-lg border border-slate-200 z-50
-           opacity-0 scale-95 -translate-y-2 transform 
-           transition-all duration-200 ease-out 
-           pointer-events-none; /* Evita clics cuando está oculto */
+    @apply pointer-events-none absolute right-0 top-12 z-50
+           w-56 transform rounded-lg border 
+           border-slate-200 bg-white shadow-xl
+           opacity-0 scale-95 -translate-y-2
+           transition-all duration-200 ease-out
+           
+           /* Estilos Dark mode */
+           dark:border-slate-700 dark:bg-slate-800;
   }
 
-  /* Define el estado 'activo' que el JS aplicará.
-    Lo hace visible, lo escala a 100% y lo posiciona.
-  */
+  /* Estado 'activo' (visible) que aplica JS */
   .menuActivo {
-    @apply opacity-100 scale-100 translate-y-0 pointer-events-auto;
+    @apply pointer-events-auto translate-y-0 scale-100 opacity-100;
   }
 
-  /*
-    Animación de las líneas del botón hamburguesa.
-    El JS aplicará 'menuActivo' al 'button' (no solo al 'menu').
+  /* Animación de las líneas del botón (hacia 'X')
+    cuando '.menuActivo' se aplica al <button> padre '.hamburgerBtn'.
   */
   .hamburgerBtn.menuActivo .line-1 {
     @apply translate-y-2 rotate-45;
@@ -77,5 +127,30 @@ body {
   }
   .hamburgerBtn.menuActivo .line-3 {
     @apply -translate-y-2 -rotate-45;
+  }
+}
+/* --- CSS Adicional (para animaciones de entrada) --- */
+@layer utilities {
+  /* Animación de entrada para vistas/páginas */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+  }
+
+  /* Respetar reduced-motion para la nueva animación */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up {
+      animation: none;
+    }
   }
 }

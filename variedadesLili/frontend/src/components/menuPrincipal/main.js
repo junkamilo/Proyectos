@@ -6,6 +6,7 @@ import Inventario from "./Inventario";
 import ModificarProductos from "./ModificarProductos";
 
 const main = () => {
+
   // Instanciamos los componentes
   const addProductos = AgregarProductos();
   const editarProduc = ModificarProductos();
@@ -14,31 +15,32 @@ const main = () => {
   const pedidos = ComprasPedidos();
   const nuevoUser = AgregarUser();
 
-  const container = document.createElement("div");
-  // --- Clases de Tailwind Aplicadas (Main) ---
-  // Layout: Ancho máximo y centrado (igual que el header), padding horizontal
-  // Padding vertical 'py-8' para dar espacio debajo del header 'sticky'
-  container.className = "appMain max-w-screen-xl mx-auto px-4 sm:px-6 py-8";
+  // Contenedor principal (<main>)
+  const container = document.createElement("main");
+  // 'flex-grow' es clave para que ocupe el espacio entre header y footer
+  container.className = "appMain flex-grow";
+
+  // Wrapper interno para centrado y padding
+  const innerWrapper = document.createElement("div");
+  innerWrapper.className =
+    "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 " + // Coherente con Header/Footer
+    "py-12 md:py-16 " + // Más espaciado vertical
+    "animate-fade-in-up"; // Animación de entrada (ver CSS)
 
   // Título del área principal
   const title = document.createElement("h2");
   title.textContent = "Panel Principal";
-  // --- Clases de Tailwind Aplicadas (Título) ---
-  // Estilo: Grande, negrita, color oscuro y margen inferior
-  title.className = "mainTitulo text-3xl font-bold text-slate-900 mb-6";
+  // Título innovado con el gradiente de la SPA
+  title.className =
+    "mainTitulo text-4xl lg:text-5xl font-extrabold tracking-tight text-center mb-10 md:mb-14 " +
+    "bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent animate-gradient-shift";
 
   // Contenedor donde irán las cards
   const content = document.createElement("div");
-  // --- Clases de Tailwind Aplicadas (Content) ---
-  // Layout: ¡CSS Grid!
-  // 'grid': Activa el grid.
-  // 'gap-6': Espacio entre tarjetas.
-  // 'grid-cols-1': 1 columna en móvil (por defecto).
-  // 'sm:grid-cols-2': 2 columnas en tablet.
-  // 'lg:grid-cols-3': 3 columnas en escritorio.
   content.className =
-    "mainContent grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
+    "mainContent grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"; // Gap optimizado
 
+  // --- Ensamblado (Lógica sin tocar) ---
   content.append(
     addProductos,
     editarProduc,
@@ -48,7 +50,8 @@ const main = () => {
     nuevoUser
   );
 
-  container.append(title, content);
+  innerWrapper.append(title, content);
+  container.append(innerWrapper);
 
   return container;
 };
