@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/*
+  Paleta de colores inspirada en Rappi.
+  Ajustada para usar el fondo oscuro y acentuar con los colores de marca.
+*/
+
+:root {
+  /* --- Base de la Marca (Inspiración Rappi) --- */
+  --color-rappi-primary: 255 77 56; /* Rojo-Naranja Vibrante (Foco Principal, CTAs, Hero) */
+  --color-rappi-secondary: 59 201 103; /* Verde Brillante (Mercados) */
+  --color-rappi-accent: 255 186 0; /* Amarillo-Naranja (Promociones, Turbo) */
+
+  /* --- Fondo / Superficies --- */
+  --color-rappi-dark: 28 28 28; /* Gris Oscuro Suave (Tu fondo principal #1c1c1c) */
+  --color-surface-base: 255 255 255; /* Blanco puro (Para Navbar, tarjetas sobre el dark) */
+  --color-surface-light: 247 249 250; /* Gris muy claro (Para elementos con elevación) */
+
+  /* --- Texto y Iconografía --- */
+  --color-text-default: 34 34 34; /* Negro oscuro (Texto principal sobre fondos claros) */
+  --color-text-light: 245 245 245; /* Blanco Roto (Texto sobre fondos oscuros, como el Hero) */
+  --color-text-muted: 107 114 128; /* Gris medio (Texto secundario) */
+}
+
+/* Base: Aplicar el color de fondo principal a todo el cuerpo */
+body {
+  background-color: var(--color-rappi-dark);
+}
+
+/* 2. Keyframes y Animaciones Sutiles */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicación de la animación como utilidad de Tailwind */
+.animate-slideIn {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+/* Regla para respetar 'prefers-reduced-motion' */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slideIn {
+    animation: none;
+    opacity: 1;
+  }
+}
