@@ -101,7 +101,7 @@ export const Botones = () => {
                   <div className="flex-grow text-center sm:text-left">
                     <p className="text-sm text-gray-400 uppercase tracking-wide font-bold mb-1">Resultado Esperado</p>
                     <p className="text-gray-700 text-lg">
-                      Verás el botón <span className="font-bold font-mono text-[#ffba00] bg-amber-100/50 px-1 rounded">[Confirmar pago]</span>.
+                      Se muestra el botón <span className="font-bold font-mono text-[#ffba00] bg-amber-100/50 px-1 rounded">[Confirmar pago]</span>.
                     </p>
                   </div>
                   {/* Simulación Visual UI */}

@@ -76,7 +76,7 @@ export const Titulos = () => {
                         <div className="relative pb-6 pl-6">
                             <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-purple-400 ring-4 ring-white"></div>
                             <p className="text-xs font-bold text-purple-500 uppercase mb-1">Módulo</p>
-                            <p className="text-gray-800 font-bold">IMFT</p>
+                            <p className="text-gray-800 font-bold">Metricas</p>
                             <p className="text-gray-500 text-xs mt-1">Sigla del sistema o módulo principal.</p>
                         </div>
 
@@ -84,7 +84,7 @@ export const Titulos = () => {
                         <div className="relative pb-6 pl-6">
                             <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-blue-400 ring-4 ring-white"></div>
                             <p className="text-xs font-bold text-blue-500 uppercase mb-1">Funcionalidad General</p>
-                            <p className="text-gray-800 font-bold">Creación de productos</p>
+                            <p className="text-gray-800 font-bold">Operaciones_DiasDeInventario</p>
                             <p className="text-gray-500 text-xs mt-1">El flujo macro donde nos encontramos.</p>
                         </div>
 
@@ -92,7 +92,7 @@ export const Titulos = () => {
                         <div className="relative pb-6 pl-6">
                             <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-cyan-400 ring-4 ring-white"></div>
                             <p className="text-xs font-bold text-cyan-500 uppercase mb-1">Funcionalidad Específica</p>
-                            <p className="text-gray-800 font-bold">Integración copérnico</p>
+                            <p className="text-gray-800 font-bold">VeridicarDiaSeleccionado</p>
                             <p className="text-gray-500 text-xs mt-1">Componente exacto o sub-proceso.</p>
                         </div>
 
@@ -100,7 +100,7 @@ export const Titulos = () => {
                         <div className="relative pl-6">
                             <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-green-400 ring-4 ring-white"></div>
                             <p className="text-xs font-bold text-green-500 uppercase mb-1">Objetivo Corto</p>
-                            <p className="text-gray-800 font-bold">Productos con EAN en ceros</p>
+                            <p className="text-gray-800 font-bold">Verificar que tanto en la grafica y la tabla muestren los datos correspendientes al dia seleccionado</p>
                             <p className="text-gray-500 text-xs mt-1">Qué estamos probando puntualmente.</p>
                         </div>
 

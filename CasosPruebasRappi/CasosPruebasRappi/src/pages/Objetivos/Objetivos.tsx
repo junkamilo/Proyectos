@@ -68,7 +68,7 @@ export const Objetivos = () => {
                         </span>
                     </h1>
                     <p className="mt-6 text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-light">
-                        Las 5 razones por las que transformamos nuestra forma de documentar.
+                        Las 6 razones por las que transformamos nuestra forma de documentar.
                     </p>
                 </div>
 
