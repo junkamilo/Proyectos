@@ -40,7 +40,7 @@ export const Objetivos = () => {
         {
             id: 5,
             title: "Legado Profesional",
-            text: "Mantener una documentación profesional y consistente a lo largo del tiempo. Que sea útil hoy y también dentro de un año.",
+            text: "Mantener una documentación profesional y consistente a lo largo del tiempo. Que sea útil hoy y también en mucho tiempo.",
             iconColor: "from-[#ffba00] to-[#ffd560]", 
             shadowColor: "shadow-yellow-500/20",
             borderColor: "group-hover:border-yellow-200",
