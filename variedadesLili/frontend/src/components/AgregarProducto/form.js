@@ -22,21 +22,29 @@ const formulario = () => {
   const groupMaterial = MaterialProducto();
   const button = Button();
 
-  // --- Contenedor Principal (Sin cambios) ---
   const container = document.createElement("div");
   container.className =
-    "w-full max-w-2xl mx-auto p-6 sm:p-8 bg-white shadow-xl rounded-xl border border-slate-200 mt-10";
+    "w-full max-w-3xl mx-auto " + // Ancho optimizado para 2 columnas
+    "p-6 sm:p-10 " + // Padding interno generoso
+    "mt-8 sm:mt-12 " + // Separación del header
+    "bg-white/90 dark:bg-slate-800/95 backdrop-blur-sm " + // Efecto "Glass" sólido (legibilidad)
+    "shadow-2xl shadow-purple-900/5 dark:shadow-black/50 " + // Sombra tintada sutil
+    "rounded-2xl border border-white/50 dark:border-slate-700 " + // Borde sutil
+    "animate-fade-in-up"; // Animación de entrada (requiere el CSS global previo)
 
-  // --- Título (Sin cambios) ---
+  // --- Título ---
   const title = document.createElement("h2");
   title.textContent = "Registrar Producto";
   title.className =
-    "text-2xl md:text-3xl font-bold text-center text-slate-900 mb-8";
+    "text-3xl md:text-4xl font-extrabold text-center mb-8 md:mb-12 " + // Tipografía grande
+    "bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent " + // Gradiente de marca (ligeramente más oscuro para legibilidad sobre blanco)
+    "tracking-tight";
 
-  // --- Formulario (¡Mejora de Layout!) ---
-  // AHORA ES UN GRID: 1 columna en móvil, 2 en escritorio
+  // --- Formulario (Layout Grid) ---
+  // Grid responsiva: 1 col en móvil, 2 en tablet/desktop
   const form = document.createElement("form");
-  form.className = "grid grid-cols-1 md:grid-cols-2 gap-6";
+  form.className =
+    "grid grid-cols-1 md:grid-cols-2 " + "gap-6 md:gap-x-8 md:gap-y-8";
   // --- Ensamblaje Final ---
   // El orden ahora es importante para el grid
   form.append(
