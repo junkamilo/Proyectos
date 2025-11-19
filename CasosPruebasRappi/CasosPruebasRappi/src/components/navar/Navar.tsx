@@ -8,7 +8,7 @@ export const Navar = () => {
   // 🟢 Tus items EXACTOS convertidos a un array para poder filtrarlos
   const items = [
     {
-      title: "1) Objetivo-Estandarizacion",
+      title: "Objetivo-Estandarizacion",
       path: "/",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#3bc967] to-[#6feba5] flex items-center justify-center text-white shadow-md shadow-green-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
@@ -21,7 +21,7 @@ export const Navar = () => {
     },
 
     {
-      title: "2) Redaccion",
+      title: "1) Redaccion",
       path: "/redaccion",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
@@ -34,7 +34,7 @@ export const Navar = () => {
     },
 
     {
-      title: "3) Botones entre corchetes [ ]",
+      title: "2) Botones entre corchetes [ ]",
       path: "/botones",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#ffba00] to-[#ffd560] flex items-center justify-center text-white shadow-md shadow-yellow-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
@@ -47,7 +47,7 @@ export const Navar = () => {
     },
 
     {
-      title: "4) Textos fijos entre comillas “ ”",
+      title: "3) Textos fijos entre comillas “ ”",
       path: "/texto",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-purple-400 flex items-center justify-center text-white shadow-md shadow-purple-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
@@ -60,7 +60,7 @@ export const Navar = () => {
     },
 
     {
-      title: "5) Variables entre...",
+      title: "4) Variables entre...",
       path: "/variables",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500 to-teal-300 flex items-center justify-center text-white shadow-md shadow-teal-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
@@ -73,7 +73,7 @@ export const Navar = () => {
     },
 
     {
-      title: "6) Todo objetivo debe iniciar con...",
+      title: "5) Todo objetivo debe iniciar con...",
       path: "/nombresCasosPrubas",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-300 flex items-center justify-center text-white shadow-md shadow-pink-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
@@ -87,7 +87,7 @@ export const Navar = () => {
     },
 
     {
-      title: "7) Titulos con estructura estandarizada",
+      title: "6) Titulos con estructura estandarizada",
       path: "/titulos",
       icon: (
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-600 to-gray-400 flex items-center justify-center text-white shadow-md shadow-gray-500/20 group-hover:scale-110 transition-transform duration-300 ease-out">
