@@ -1,6 +1,9 @@
+import { NavLink } from "react-router-dom";
 import { Navar } from "../navar/Navar";
+import { useSearch } from "../../context/SearchContext";
 
 export const Header = () => {
+    const { setQuery } = useSearch();
     return (
         <header className="sticky top-0 z-50 flex flex-col bg-white shadow-lg transition-all duration-300 font-sans">
 
@@ -32,6 +35,7 @@ export const Header = () => {
                             </div>
                             <input
                                 type="text"
+                                onChange={(e) => setQuery(e.target.value)}
                                 className="block w-full pl-11 pr-4 py-3 bg-gray-100 border-none rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#ff4d38]/20 focus:bg-white transition-all shadow-sm"
                                 placeholder="Buscar en Rappi..."
                             />
@@ -40,14 +44,20 @@ export const Header = () => {
 
                     {/* 4. Botones Derecha */}
                     <div className="flex items-center gap-3 shrink-0">
-                        <button className="hidden md:flex items-center gap-2 px-4 py-2 text-[#ff4d38] font-bold hover:bg-[#ff4d38]/10 rounded-xl transition-colors">
-                            Ingreso
-                        </button>
-                        <button className="bg-[#ff4d38] text-white px-5 py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 hover:bg-[#e04330] hover:scale-105 transition-all active:scale-95 flex items-center gap-2">
-                            <span className="hidden sm:inline">Carrito</span>
+                        <NavLink
+                            to="/ejemploPrueba"
+                            className={({ isActive }) =>
+                                `px-5 py-3 rounded-2xl font-bold shadow-lg flex items-center gap-2 transition-all ${isActive
+                                    ? "bg-[#533c39] text-white scale-105 shadow-orange-600/40"   // ACTIVO
+                                    : "bg-[#ff4d38] text-white hover:bg-[#e04330] hover:scale-105"}`
+                            }
+                        >
+                            <span className="hidden sm:inline">Ejemplo Prueba</span>
                             <span className="sm:hidden">0</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                        </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </NavLink>
                     </div>
 
                 </div>
@@ -55,7 +65,7 @@ export const Header = () => {
 
             {/* --- PARTE INFERIOR: Navar (Categorías / Reglas) --- */}
             <div className="bg-white/95 backdrop-blur">
-            <Navar/>
+                <Navar />
             </div>
         </header>
     );

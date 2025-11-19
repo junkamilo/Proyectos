@@ -7,6 +7,7 @@ import { Variables } from '../pages/Variables/Variables';
 import { NombresCasosPruebas } from '../pages/NombreCasosPruebas/NombresCasosPruebas';
 import { Titulos } from '../pages/Titulos/Titulos';
 import { App } from '../components/App/App';
+import { EjemploPrueba } from '../components/EjemploPrueba/EjemploPrueba';
 
 export const Approuter = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const Approuter = createBrowserRouter([
       { path: "variables", element: <Variables /> },
       { path: "nombresCasosPrubas", element: <NombresCasosPruebas /> },
       { path: "titulos", element: <Titulos /> },
+      { path: "ejemploPrueba", element: <EjemploPrueba /> },
     ],
   },
 ]);
