@@ -3,54 +3,55 @@ import { CuerpoTbodyTabla } from "./CuerpoTbodyTabla";
 import { headerTabla } from "./headerTabla";
 
 export const TablaEliminarProducto = async (productos = []) => {
-
-  // Contenedor principal (tabla + panel de detalles)
   const mainContainer = document.createElement("div");
   mainContainer.className =
-    "flex flex-col lg:flex-row items-start gap-8 " + // Layout optimizado para desktop
-    "w-full max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 " + // Márgenes y ancho máximo
-    "animate-fade-in-up"; // Animación de entrada
+    "relative flex flex-col lg:flex-row items-start gap-6 " +
+    "w-full max-w-[1600px] mx-auto mt-6 px-4 sm:px-6 lg:px-8 " +
+    "animate-fade-in-up transition-all duration-500 ease-out";
 
-  // Sección que contiene solo la tabla
   const section = document.createElement("section");
   section.className =
-    "w-full lg:w-2/3 flex flex-col gap-6 " + // Ancho
-    "p-6 sm:p-8 " + // Padding interno
-    "bg-white/80 dark:bg-slate-800/90 backdrop-blur-xl " + // Fondo Glass
-    "shadow-2xl shadow-purple-900/10 dark:shadow-black/50 " + // Sombra Sutil
-    "rounded-2xl border border-white/50 dark:border-slate-700 " + // Bordes
-    "transition-all duration-500"; // Suavidad
+    "flex-1 w-full min-w-0 flex flex-col gap-6 " +
+    "p-5 sm:p-6 lg:p-8 " +
+    "bg-slate-900/60 backdrop-blur-xl " + // Estilo Dark Glass
+    "border border-slate-800/60 " +
+    "shadow-2xl shadow-black/20 " +
+    "rounded-2xl transition-all duration-500 ease-in-out";
 
-  // Encabezado con el título y acciones superiores
+  // Encabezado (Titulo y Buscador)
   const headerContainer = headerTabla();
   section.append(headerContainer);
 
-  // Wrapper para permitir scroll horizontal en móviles
+  // --- Wrapper con Scroll Horizontal ---
   const tableWrapper = document.createElement("div");
   tableWrapper.className =
     "w-full overflow-x-auto rounded-xl " +
-    "border border-slate-200/60 dark:border-slate-700 " +
-    "custom-scrollbar"; // Scrollbar estilizado (ver CSS global)
+    "border border-slate-800/50 bg-slate-900/30 " + // Fondo de pista sutil
+    "custom-scrollbar"; // Tu clase CSS de scroll
 
-  // Tabla principal
+  // --- Tabla ---
   const table = document.createElement("table");
   table.className =
     "w-full text-left border-collapse whitespace-nowrap " +
-    "text-slate-600 dark:text-slate-300";
+    "text-slate-400 text-sm"; // Texto legible y con buen contraste en dark mode
 
-  // Cabecera de columnas (Ya tiene estilo Sticky/Glass por el componente importado)
+  // Cabecera (Thead)
   const thead = CabeceraThead();
 
-  // Cuerpo de la tabla + sección de detalles del producto
-  const { tbody, productDetailSection } = await CuerpoTbodyTabla(productos);
+  // --- Lógica de Cuerpo y Aside (Preservada) ---
+  // Mantenemos tu 'fix real' de seguridad
+  const { tbody, productDetailSection } =
+    (await CuerpoTbodyTabla(productos)) ?? {};
 
-  // Ensamblado final de la tabla
-  table.append(thead, tbody);
+  const safeTbody = tbody ?? document.createElement("tbody");
+  const safeAside = productDetailSection ?? document.createElement("aside");
+
+  // Ensamblado
+  table.append(thead, safeTbody);
   tableWrapper.append(table);
   section.append(tableWrapper);
 
-  // Agregar tabla y panel de detalles al contenedor principal
-  mainContainer.append(section, productDetailSection);
+  mainContainer.append(section, safeAside);
 
   return mainContainer;
 };

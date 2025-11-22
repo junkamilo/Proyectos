@@ -21,7 +21,7 @@ export const CuerpoTbodyTabla = async (productos = []) => {
     // --- EMPTY STATE (Moderno) ---
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    // Asumimos 9 columnas basado en headers anteriores
+
     cell.colSpan = 9;
     cell.className = "px-6 py-16 text-center";
 
@@ -35,8 +35,16 @@ export const CuerpoTbodyTabla = async (productos = []) => {
             <p class="text-base font-medium text-slate-500 dark:text-slate-400">No hay productos registrados.</p>
         </div>
     `;
+
     row.append(cell);
     tbody.append(row);
+
+    // 🔥 FIX OBLIGATORIO: retornar también en el "no hay productos"
+    return {
+      tbody,
+      productDetailSection,
+      detailContent,
+    };
   } else {
     // Renderizar productos
     dataProductos.forEach(
@@ -55,7 +63,6 @@ export const CuerpoTbodyTabla = async (productos = []) => {
         fecha_actualizacion,
       }) => {
         const row = document.createElement("tr");
-        // Diseño: Hover Rojo Suave (Alerta)
         row.className =
           "group transition-colors duration-200 ease-in-out cursor-pointer " +
           "hover:bg-red-50 dark:hover:bg-red-900/10";
@@ -69,7 +76,6 @@ export const CuerpoTbodyTabla = async (productos = []) => {
               r.classList.remove("bg-red-100", "dark:bg-red-900/30")
             );
 
-          // Diseño: Selección activa en Rojo
           row.classList.add("bg-red-100", "dark:bg-red-900/30");
 
           AsideRenderizadoDetalles(
@@ -102,7 +108,6 @@ export const CuerpoTbodyTabla = async (productos = []) => {
         img.src = url_foto_producto
           ? `http://localhost:3000${url_foto_producto}`
           : "https://via.placeholder.com/64x64?text=No+Img";
-
         img.alt = nombre_producto;
         img.className =
           "w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800";
@@ -156,14 +161,13 @@ export const CuerpoTbodyTabla = async (productos = []) => {
         tdMaterial.textContent = material;
         tdMaterial.className = "px-6 py-4 capitalize text-sm";
 
-        // 8. Estado (Badge Moderno)
+        // 8. Estado
         const tdEstado = document.createElement("td");
         tdEstado.className = "px-6 py-4";
 
         const badge = document.createElement("span");
         badge.textContent = estado;
 
-        // Lógica de estilos (Igual que en Modificar para consistencia)
         let badgeClasses = "bg-slate-50 text-slate-600 ring-slate-500/30";
         const st = estado?.toLowerCase();
 
@@ -180,7 +184,7 @@ export const CuerpoTbodyTabla = async (productos = []) => {
         badge.className = `inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${badgeClasses} uppercase tracking-wide`;
         tdEstado.append(badge);
 
-        // 9. Acciones (Botón Eliminar)
+        // 9. Acciones
         const tdAcciones = document.createElement("td");
         tdAcciones.className = "px-6 py-4 text-center";
 
@@ -191,16 +195,12 @@ export const CuerpoTbodyTabla = async (productos = []) => {
         detelButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1H9a1 1 0 00-1 1v3M4 7h16" /></svg>`;
 
         detelButton.className =
-          "p-2 rounded-lg transition-all duration-200 " +
-          "text-red-500 hover:text-red-700 hover:bg-red-100 " + // Diseño Destructivo
-          "dark:text-red-400 dark:hover:bg-red-900/50 " +
-          "focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2";
+          "p-2 rounded-lg transition-all duration-200 text-red-500 hover:text-red-700 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2";
         detelButton.title = "Eliminar Producto";
 
         detelButton.addEventListener("click", async (e) => {
           e.stopPropagation();
 
-          // Lógica intacta, solo se mejora el confirm si pudieras, pero respeto "no tocar lógica"
           const confirmar = confirm(
             `¿Seguro que deseas eliminar "${nombre_producto}"?`
           );
@@ -210,7 +210,7 @@ export const CuerpoTbodyTabla = async (productos = []) => {
             await deleteProductoService(id_producto);
 
             alert("Producto eliminado correctamente");
-            renderTablaProductos(); // Asumo que esto recarga la tabla
+            renderTablaProductos();
           } catch (error) {
             alert(error.message);
           }

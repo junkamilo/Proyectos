@@ -3,56 +3,121 @@ import { CabeceraThead } from "./CabeceraThead";
 import { CuerpoTbodyTabla } from "./CuerpoTbodyTabla";
 import { headerTabla } from "./headerTabla";
 
+// TablaInventario.js
 export const TablaInventario = async (productos = []) => {
-  // Contenedor principal (tabla + panel de detalles)
+  // Contenedor principal
   const mainContainer = document.createElement("div");
   mainContainer.className =
-    "flex flex-col lg:flex-row items-start gap-8 " + // Layout y espaciado
-    "w-full max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 " + // Márgenes
-    "animate-fade-in-up"; // Animación de entrada global
+    "relative flex flex-col lg:flex-row items-start gap-6 " + // Gap reducido para mejor cohesión
+    "w-full max-w-[1600px] mx-auto mt-6 px-4 sm:px-6 lg:px-8 " + // Max-width amplio para dashboards
+    "animate-fade-in-up transition-all duration-500 ease-out";
 
-  // Sección que contiene solo la tabla (El "Card" de la tabla)
+  // Sección Tabla ("Card" principal)
+  // CAMBIO CLAVE: 'flex-1 w-full min-w-0'. Elimina 'lg:w-2/3' para que llene todo el espacio inicialmente.
   const section = document.createElement("section");
   section.className =
-    "w-full lg:w-2/3 flex flex-col gap-6 " + // Ancho (2/3 en desktop)
-    "p-6 sm:p-8 " + // Padding interno
-    "bg-white/80 dark:bg-slate-800/90 backdrop-blur-xl " + // Efecto Glass
-    "shadow-2xl shadow-purple-900/10 dark:shadow-black/50 " + // Sombra tintada
-    "rounded-2xl border border-white/50 dark:border-slate-700 " + // Bordes
-    "transition-all duration-500"; // Transiciones suaves
+    "flex-1 w-full min-w-0 flex flex-col gap-6 " + // min-w-0 evita desbordes en flex
+    "p-5 sm:p-6 lg:p-8 " +
+    "bg-slate-900/60 backdrop-blur-xl " + // Fondo oscuro moderno
+    "border border-slate-800/60 " + // Borde sutil
+    "shadow-2xl shadow-black/20 " +
+    "rounded-2xl transition-all duration-500 ease-in-out"; // Transición suave al redimensionar
 
-  //Instanciamos Get productos para hacer ek conteo de productos
-  const productosConteo = await getAllProductosServices();
+  // Header dinámico
+  // Nota: Asumo que headerTabla devuelve un nodo. Si necesitas estilos ahí, avísame.
+  const productosConteo = await getAllProductosServices(); // Tu lógica original
   const total = productosConteo.data.length;
   const headerContainer = headerTabla(total);
   section.append(headerContainer);
 
-  // Wrapper para permitir scroll horizontal en móviles
+  // Wrapper Scroll
   const tableWrapper = document.createElement("div");
   tableWrapper.className =
     "w-full overflow-x-auto rounded-xl " +
-    "border border-slate-200/60 dark:border-slate-700 " + // Borde del wrapper
-    "custom-scrollbar"; // Scrollbar personalizada (Ver CSS)
+    "border border-slate-800/50 bg-slate-900/30 " + // Fondo sutil para la "pista" de la tabla
+    "custom-scrollbar";
 
-  // Tabla principal
+  // Tabla
   const table = document.createElement("table");
   table.className =
     "w-full text-left border-collapse whitespace-nowrap " +
-    "text-slate-600 dark:text-slate-300"; // Texto base
+    "text-slate-400 text-sm"; // Tipografía base refinada
 
-  // Cabecera de columnas
+  // Construcción de tabla (Lógica preservada)
   const thead = CabeceraThead();
-
-  // Cuerpo de la tabla + sección de detalles del producto (Logic preservation)
   const { tbody, productDetailSection } = await CuerpoTbodyTabla(productos);
 
-  // Ensamblado final de la tabla
   table.append(thead, tbody);
   tableWrapper.append(table);
   section.append(tableWrapper);
 
-  // Agregar tabla y panel de detalles al contenedor principal
+  // Renderizado
   mainContainer.append(section, productDetailSection);
 
   return mainContainer;
+};
+
+// AsideDetallesProductos.js
+export const AsideDetallesProductos = () => {
+  const productDetailSection = document.createElement("aside");
+
+  // CLAVE DE DISEÑO:
+  // 'hidden' por defecto. Cuando se muestre, 'lg:w-[400px]' forzará a la tabla a encogerse.
+  productDetailSection.className =
+    // --- Layout Responsivo ---
+    "hidden flex-col " + // Oculto inicialmente
+    "w-full lg:w-[400px] xl:w-[450px] shrink-0 " + // Ancho fijo rígido en desktop, shrink-0 impide que se aplaste
+    "h-[85vh] lg:h-[calc(100vh-6rem)] sticky top-24 " + // Sticky position
+    // --- Estética Glass Dark ---
+    "bg-slate-900/80 backdrop-blur-2xl " +
+    "border-l border-t border-white/10 lg:border border-slate-700/50 " + // Bordes sutiles
+    "rounded-t-2xl lg:rounded-2xl " +
+    "shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)] " + // Sombra profunda
+    "z-30 overflow-hidden transition-all duration-300 animate-slide-in-right";
+
+  // Header del Aside
+  const detailHeader = document.createElement("div");
+  detailHeader.className =
+    "flex justify-between items-center " +
+    "px-6 py-5 " +
+    "bg-gradient-to-b from-slate-800/50 to-transparent " + // Gradiente sutil superior
+    "border-b border-slate-700/50 backdrop-blur-md";
+
+  const detailTitle = document.createElement("h3");
+  detailTitle.textContent = "Ficha Técnica";
+  detailTitle.className =
+    "text-base font-bold uppercase tracking-wider text-slate-200";
+
+  // Botón Cerrar
+  const closeIconBtn = document.createElement("button");
+  closeIconBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  `;
+  closeIconBtn.className =
+    "p-2 -mr-2 rounded-lg " +
+    "text-slate-400 transition-all duration-200 " +
+    "hover:text-white hover:bg-white/10 hover:rotate-90 " + // Micro-interacción rotación
+    "focus:outline-none focus:ring-2 focus:ring-indigo-500/50";
+
+  closeIconBtn.addEventListener("click", () => {
+    // Animación de salida manual podría ir aquí, pero por ahora toggle simple
+    productDetailSection.classList.add("hidden");
+    productDetailSection.classList.remove("flex");
+  });
+
+  detailHeader.append(detailTitle, closeIconBtn);
+
+  // Contenedor Scrollable
+  const detailContent = document.createElement("div");
+  detailContent.className =
+    "flex flex-col p-6 gap-4 overflow-y-auto custom-scrollbar h-full";
+
+  productDetailSection.append(detailHeader, detailContent);
+
+  return {
+    productDetailSection,
+    detailContent,
+  };
 };
