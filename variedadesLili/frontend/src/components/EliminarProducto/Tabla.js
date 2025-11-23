@@ -31,6 +31,7 @@ export const TablaEliminarProducto = async (productos = []) => {
 
   // --- Tabla ---
   const table = document.createElement("table");
+  table.id = "tabla-productos";
   table.className =
     "w-full text-left border-collapse whitespace-nowrap " +
     "text-slate-400 text-sm"; // Texto legible y con buen contraste en dark mode

@@ -1,6 +1,6 @@
 import formLogin from "../../components/IniciarSesion/formLogin";
 
-export const inicioController = () => {
+export const LoginController = () => {
   const container = document.getElementById("login-container");
 
   // Limpia si hay algo dentro

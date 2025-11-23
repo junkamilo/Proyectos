@@ -1,3 +1,4 @@
+import { eliminarFilaProducto } from "../../helpers/helpersEliminarProducto/eliminarFilaProducto ";
 import { deleteProductoService } from "../../services/Productos/productosServices";
 
 export const renderView = (product, detailContent) => {
@@ -137,7 +138,8 @@ export const renderView = (product, detailContent) => {
       await deleteProductoService(product.id_producto);
 
       alert("Producto eliminado correctamente");
-      //renderTablaProductos(); // actualiza la vista
+      eliminarFilaProducto(product.id_producto);
+      detailContent.innerHTML = "";
     } catch (error) {
       alert(error.message);
     }

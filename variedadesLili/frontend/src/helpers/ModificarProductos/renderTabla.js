@@ -1,3 +1,5 @@
+import { getEstadoClasses } from "./getEstadoProductos";
+
 export const actualizarFilaProducto = (productoActualizado) => {
   const fila = document.querySelector(
     `tr[data-product-id="${productoActualizado.id_producto}"]`
@@ -14,12 +16,13 @@ export const actualizarFilaProducto = (productoActualizado) => {
   nombre.textContent = productoActualizado.nombre;
   desc.textContent = productoActualizado.descripcion;
 
-  // Celda 2: ID (normalmente igual)
+  // Celda 2: ID
   fila.children[1].textContent = `#${productoActualizado.id_producto}`;
 
   // Celda 3: Precio
-  fila.children[2].textContent =
-    `$${Number(productoActualizado.precio).toLocaleString()}`;
+  fila.children[2].textContent = `$${Number(
+    productoActualizado.precio
+  ).toLocaleString()}`;
 
   // Celda 4: Cantidad
   fila.children[3].textContent = productoActualizado.cantidad;
@@ -33,7 +36,17 @@ export const actualizarFilaProducto = (productoActualizado) => {
   // Celda 7: Material
   fila.children[6].textContent = productoActualizado.material;
 
-  // Celda 8: Estado badge
+  // Celda 8: Estado (badge)
   const badge = fila.children[7].querySelector("span");
-  badge.textContent = productoActualizado.estado;
+  const estado = productoActualizado.estado.toLowerCase();
+
+  // Reset classes
+  // Limpia clases anteriores del badge
+  badge.className = "px-2 py-1 text-xs font-semibold rounded";
+
+  // Aplica las clases correctas según el estado
+  badge.className += " " + getEstadoClasses(estado);
+
+  //Mostrar en mayusculas
+  badge.textContent = estado.toUpperCase();
 };

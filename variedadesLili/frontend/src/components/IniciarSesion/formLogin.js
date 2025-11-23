@@ -85,7 +85,7 @@ const formLogin = () => {
 
       alert(`Bienvenido ${response.data.usuario.nombre}`);
       // Redirigirimos al menú principal
-      window.location.hash = "#MenuPrincipal";
+      window.location.hash = "/";
 
     } catch (error) {
       alert(error.message || "Error al iniciar sesión");

@@ -3,22 +3,23 @@ import { loadView } from "../helpers/loadView";
 import { AgregarProductosController } from "../views/AgregarProductos/AgregarProductosController";
 import { AgregarUserController } from "../views/AgregarUser/AgregarUserController";
 import { EliminarProductosController } from "../views/EliminarProductos/EliminarProductosController";
-import { inicioController } from "../views/Inicio/inicioController";
 import { InventarioController } from "../views/Inventario/InventarioController";
+import { LoginController } from "../views/Login/LoginController";
 import { menuPrincipalController } from "../views/MenuPrincipal/menuPrincipalController";
 import { ModificarProductosController } from "../views/ModificarProductos/ModificarProductosController";
+import { mostrarUserController } from "../views/MostrarUsers/mostrarUserController";
 import { PedidosController } from "../views/Pedidos/PedidosController";
 
 const routes = {
   "/": {
-    template: "Inicio/inicio.html",
-    controlador: inicioController,
-    private: false,
-  },
-  MenuPrincipal: {
     template: "MenuPrincipal/menuPrincipal.html",
     controlador: menuPrincipalController,
     private: true,
+  },
+  Login: {
+    template: "Login/login.html",
+    controlador: LoginController,
+    private: false,
   },
   AgregarProductos: {
     template: "AgregarProductos/AgregarProductos.html",
@@ -28,6 +29,11 @@ const routes = {
   AgregarUser: {
     template: "AgregarUser/AgregarUser.html",
     controlador: AgregarUserController,
+    private: true,
+  },
+  MostrarUsers: {
+    template: "MostrarUsers/mostrarUser.html",
+    controlador: mostrarUserController,
     private: true,
   },
   EliminarProductos: {
@@ -58,8 +64,8 @@ export const router = async (app) => {
 
   if (!rutas) {
     app.className = "";
-    await loadView(app, "Inicio/inicio.html");
-    inicioController();
+    await loadView(app, "MenuPrincipal/menuPrincipal.html");
+    menuPrincipalController();
     return;
   }
 

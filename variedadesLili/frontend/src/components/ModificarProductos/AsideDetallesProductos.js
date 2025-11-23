@@ -1,11 +1,4 @@
 export const AsideDetallesProductos = () => {
-  /* NOTAS DE DISEÑO (SPA COHERENCE - "Glass Sidebar"):
-     - Estructura: Sticky en Desktop, Flotante/Sheet en Mobile.
-     - Superficie: 'bg-white/90' con 'backdrop-blur-xl' para el efecto cristal.
-     - Borde: 'border-white/50' para el brillo del borde en estilo Glass.
-     - Scroll: 'custom-scrollbar' (clase CSS definida previamente) para
-       que la barra de desplazamiento no rompa la estética.
-  */
 
   const productDetailSection = document.createElement("aside");
   productDetailSection.className =

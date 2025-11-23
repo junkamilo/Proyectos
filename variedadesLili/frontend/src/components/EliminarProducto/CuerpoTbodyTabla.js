@@ -70,6 +70,8 @@ export const CuerpoTbodyTabla = async (productos = []) => {
 
         // Click -> Detalles
         row.addEventListener("click", () => {
+          console.log("click");
+          
           tbody
             .querySelectorAll("tr")
             .forEach((r) =>
@@ -210,7 +212,14 @@ export const CuerpoTbodyTabla = async (productos = []) => {
             await deleteProductoService(id_producto);
 
             alert("Producto eliminado correctamente");
-            renderTablaProductos();
+
+            // 🔥 Vuelve a renderizar la tabla COMPLETA
+            const { tbody: nuevoTbody } = await CuerpoTbodyTabla();
+
+            const tbodyActual = document.querySelector(
+              "#tabla-productos tbody"
+            );
+            tbodyActual.parentNode.replaceChild(nuevoTbody, tbodyActual);
           } catch (error) {
             alert(error.message);
           }

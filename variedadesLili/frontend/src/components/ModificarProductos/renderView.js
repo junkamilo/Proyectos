@@ -1,3 +1,4 @@
+import { getEstadoClasses } from "../../helpers/ModificarProductos/getEstadoProductos.js";
 import { renderEdit } from "./renderEdit.js";
 
 export const renderView = (product, detailContent) => {
@@ -14,7 +15,7 @@ export const renderView = (product, detailContent) => {
     descripcion: product.descripcion ?? "",
     precio: product.precio ?? 0,
     tamaño: product.tamano ?? product.tamaño ?? "",
-    tipo: product.categoria ?? product.tipo ?? "",
+    categoria: product.categoria ?? product.tipo ?? "",
     material: product.material ?? "",
     estado: product.estado ?? "Activo",
   };
@@ -34,14 +35,27 @@ export const renderView = (product, detailContent) => {
     "w-full h-64 object-cover transition-transform duration-700 ease-in-out group-hover:scale-105";
 
   // Badge de Estado
+  // Suponiendo que esto va dentro de tu renderView o Card
   const statusLabel = document.createElement("span");
-  statusLabel.textContent = product.estado;
-  let labelColor = "bg-slate-700/90 text-slate-100 shadow-slate-500/20"; // Default
-  if (product.estado === "activo")
-    labelColor = "bg-emerald-500/90 text-white shadow-emerald-500/20"; // Green modern
-  if (product.estado === "agotado")
-    labelColor = "bg-rose-500/90 text-white shadow-rose-500/20"; // Red modern
-  statusLabel.className = `absolute top-3 right-3 text-xs font-bold px-3 py-1 rounded-full shadow-lg backdrop-blur-sm uppercase tracking-wide ${labelColor}`;
+
+  // 1. Clases estructurales (Forma, posición, tipografía)
+  statusLabel.className =
+    "absolute top-3 right-3 z-10 " + // Posicionamiento sobre la imagen
+    "inline-flex items-center gap-1.5 " + // Flex para alinear el puntito y texto
+    "px-3 py-1 rounded-full " + // Forma de píldora
+    "text-[10px] font-bold uppercase tracking-widest " + // Tipografía técnica
+    "backdrop-blur-md transition-all duration-300 " + // Efecto cristal
+    getEstadoClasses((product.estado || "").toLowerCase()); // 2. Inyectamos los colores
+
+  // 3. Contenido HTML (Puntito + Texto)
+  // El 'currentColor' hace que el puntito herede el color del texto definido en getEstadoClasses
+  statusLabel.innerHTML = `
+  <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
+  ${product.estado}
+`;
+
+  // Añadir al padre (ej. cardImageContainer)
+  // cardImageContainer.append(statusLabel);
 
   imgContainer.append(detailImg, statusLabel);
   detailContent.append(imgContainer);
@@ -70,7 +84,7 @@ export const renderView = (product, detailContent) => {
   addDetailItem("Nombre", product.nombre, true);
   addDetailItem("ID", `#${product.id_producto}`);
   addDetailItem("Precio", `$${Number(product.precio).toLocaleString()}`);
-  addDetailItem("Categoría", product.tipo);
+  addDetailItem("Categoría", product.categoria);
   addDetailItem("Stock", product.cantidad);
   addDetailItem("Tamaño", product.tamaño);
   addDetailItem("Material", product.material);
