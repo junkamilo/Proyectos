@@ -1,6 +1,5 @@
 import { sessionComponents } from "../../helpers/helpersheader/sessionComponents";
-import logoTitulo from "./logoTitulo";
-import search from "./search"; // El import está, pero 'search' no se usa en la lógica original. Se respeta.
+import logoTitulo from "./logoTitulo"; // El import está, pero 'search' no se usa en la lógica original. Se respeta.
 
 export const header = () => {
   const titulo = logoTitulo();

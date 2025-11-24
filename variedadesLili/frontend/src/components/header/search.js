@@ -1,24 +1,4 @@
 const search = () => {
-  /* NOTAS DE DISEÑO (SPA COHERENCE - "Glassmorphism"):
-    - Coherencia (Fondo): Se elimina el 'border-slate-300' y se reemplaza el
-      fondo blanco implícito del input por un fondo semi-transparente
-      ('bg-slate-500/10') que se integra perfectamente con el header
-      "glassmorphism" ('bg-slate-100/75').
-    - Coherencia (Paleta):
-      - El 'focus:ring' se actualiza de 'pink-500' a 'purple-500'
-        para coincidir con el acento principal de la SPA.
-      - El 'hover' del botón también usa 'purple'.
-      - Los 'placeholder' y el 'text' tienen sus equivalentes
-        en 'dark' mode.
-    - Coherencia (Layout):
-      - Se mantiene 'w-full' en móvil (mobile-first).
-      - Se ajusta a 'md:w-64 lg:w-72' en desktop para dar
-        un poco más de espacio que el original.
-      - Se unifica la altura a 'h-10' para consistencia.
-    - Accesibilidad: El 'focus:ring' ahora tiene el 'offset'
-      correcto ('ring-offset-slate-100' / 'dark:ring-offset-slate-900')
-      para destacar sobre el fondo "glass" del header.
-  */
 
   // --- Contenedor (Relativo) ---
   const container = document.createElement("div");

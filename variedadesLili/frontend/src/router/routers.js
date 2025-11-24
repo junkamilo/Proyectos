@@ -9,6 +9,7 @@ import { menuPrincipalController } from "../views/MenuPrincipal/menuPrincipalCon
 import { ModificarProductosController } from "../views/ModificarProductos/ModificarProductosController";
 import { mostrarUserController } from "../views/MostrarUsers/mostrarUserController";
 import { PedidosController } from "../views/Pedidos/PedidosController";
+import { userProfileController } from "../views/UserProfile/userProfileController";
 
 const routes = {
   "/": {
@@ -34,6 +35,11 @@ const routes = {
   MostrarUsers: {
     template: "MostrarUsers/mostrarUser.html",
     controlador: mostrarUserController,
+    private: true,
+  },
+  ProFileView: {
+    template: "UserProfile/userProfile.html",
+    controlador: userProfileController,
     private: true,
   },
   EliminarProductos: {

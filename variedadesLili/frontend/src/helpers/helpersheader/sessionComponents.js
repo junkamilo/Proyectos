@@ -18,6 +18,11 @@ export const sessionComponents = () => {
       // Opcional: disparar un evento o callback para re-renderizar el header
     });
 
+    perfil.addEventListener("click", () => {
+      window.location.hash = "#ProFileView";
+      // Opcional: disparar un evento o callback para re-renderizar el header
+    });
+
     return [buttonHamburguesa, buscador,perfil, btnCerrar];
   } else {
     const btnIniciar = ButtonIniciarSeccion();
