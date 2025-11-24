@@ -1,3 +1,6 @@
+import { editarUsuario, eliminarUsuario } from "../../services/Users/authService";
+import { ModalEditarUsuario } from "../EditarUsuario/ModalEditarUsuario";
+
 const getRoleStyle = (rol) => {
   const r = (rol || "usuario").toLowerCase();
 
@@ -88,7 +91,24 @@ const UserCard = (usuario) => {
     Editar
   `;
   // Evento Edit (Hook)
-  btnEdit.onclick = () => console.log("Editar usuario:", usuario.id_usuario);
+  // Dentro del evento onclick del botón editar:
+  btnEdit.onclick = async () => {
+    ModalEditarUsuario(
+      usuario, // El objeto con los datos actuales
+      async (formData) => {
+        // Aquí llamas a tu servicio
+        try {
+          console.log("Enviando datos...", Object.fromEntries(formData));
+          // await updateUserServices(formData);
+          await editarUsuario(formData);
+          // ProductoAgregado({ message: "Usuario actualizado" }); // Tu alerta
+          // Recargar usuarios...
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+  };
 
   // Botón Eliminar
   const btnDelete = document.createElement("button");
@@ -101,8 +121,16 @@ const UserCard = (usuario) => {
     Eliminar
   `;
   // Evento Delete (Hook)
-  btnDelete.onclick = () =>
-    console.log("Eliminar usuario:", usuario.id_usuario);
+  btnDelete.onclick = async () => {
+    if (!confirm(`¿Seguro quieres eliminar a ${usuario.nombre}?`)) return;
+
+    try {
+      await eliminarUsuario(usuario.id_usuario);
+      card.remove(); // elimina la tarjeta de la UI
+    } catch (error) {
+      alert("Error al eliminar usuario: " + error.message);
+    }
+  };
 
   actionsContainer.append(btnEdit, btnDelete);
 

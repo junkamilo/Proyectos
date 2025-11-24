@@ -1,4 +1,4 @@
-import { loginUser } from "../../services/authService";
+import { loginUser } from "../../services/Users/authService";
 import logoLogin from "./logoLogin";
 
 const formLogin = () => {
