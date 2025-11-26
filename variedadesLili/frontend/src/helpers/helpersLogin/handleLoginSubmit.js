@@ -16,6 +16,11 @@ export const handleLoginSubmit = async (e, inputUserElement, inputPassElement) =
     localStorage.setItem("accessToken", response.data.accessToken);
     localStorage.setItem("refreshToken", response.data.refreshToken);
 
+    localStorage.setItem("usuario", JSON.stringify(response.data.usuario));
+
+    //Avisamos a toda la app que el estado de autenticación cambió
+    window.dispatchEvent(new Event("auth-change"));
+
     // Feedback al usuario
     await LoginExitoso(response.data.usuario.nombre);
     

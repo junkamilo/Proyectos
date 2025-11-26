@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Botón de Menú (Destructivo/Logout) --- */
+  .menu-btn-destructive {
+    @apply flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium text-left rounded-md
+    transition-colors duration-200 ease-in-out
+    text-red-600 dark:text-red-500
+    hover:bg-red-100 dark:hover:bg-red-900/50
+    focus:outline-none focus:bg-red-100 dark:focus:bg-red-900/50;
+  }
+
+  /* --- Icono del Botón --- */
+  .menu-btn-icon {
+    @apply w-5 h-5 opacity-80 transition-opacity group-hover:opacity-100;
+  }
+}

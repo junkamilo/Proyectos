@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Botón Principal (Iniciar Sesión) --- */
+  .btn-session-init {
+    @apply hidden md:block font-semibold py-2 px-5 rounded-lg text-white
+    bg-gradient-to-r from-purple-500 to-pink-500
+    shadow-md dark:shadow-black/25
+    transition-all duration-300 ease-in-out
+    hover:shadow-lg hover:-translate-y-0.5
+    active:translate-y-0 active:shadow-sm
+    motion-reduce:transform-none
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+    focus:ring-offset-slate-100 dark:focus:ring-offset-slate-900;
+  }
+
+  /* --- Botón Secundario (Cerrar Sesión) --- */
+  .btn-session-close {
+    @apply hidden md:block font-medium py-2 px-5 rounded-lg
+    text-red-600 dark:text-red-500 bg-transparent
+    transition-colors duration-300 ease-in-out
+    hover:bg-red-500/10 dark:hover:bg-red-500/20
+    focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+    focus:ring-offset-slate-100 dark:focus:ring-offset-slate-900;
+  }
+}

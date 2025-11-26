@@ -1,7 +1,7 @@
 import { ButtonCerraSeccion, ButtonIniciarSeccion } from "../../components/header/buttonsActions";
 import logoPerfil from "../../components/header/logoPerfil";
-import menuHamburguesa from "../../components/header/menuHamburguesa";
 import search from "../../components/header/search";
+import { menuHamburguesa } from "../../components/menuHambuerguesa/menuHamburguesa";
 import { estaAutenticado } from "../auth";
 
 export const sessionComponents = () => {
@@ -14,6 +14,10 @@ export const sessionComponents = () => {
     btnCerrar.addEventListener("click", () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+
+      //Avisamos que cerramos sesión
+      window.dispatchEvent(new Event("auth-change"));
+
       window.location.hash = "#Login";
       // Opcional: disparar un evento o callback para re-renderizar el header
     });
@@ -23,7 +27,7 @@ export const sessionComponents = () => {
       // Opcional: disparar un evento o callback para re-renderizar el header
     });
 
-    return [buttonHamburguesa, buscador,perfil, btnCerrar];
+    return [ buscador,buttonHamburguesa,perfil, btnCerrar];
   } else {
     const btnIniciar = ButtonIniciarSeccion();
     btnIniciar.addEventListener("click", () => {

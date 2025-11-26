@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@layer components {
+  .header-root {
+    @apply sticky top-0 z-50 w-full
+    border-b border-slate-300/50 bg-slate-100/75 backdrop-blur-lg
+    dark:border-slate-700/50 dark:bg-slate-900/75
+    transition-colors duration-300 ease-in-out;
+  }
+
+  /* --- Wrapper de Navegación --- */
+  .header-nav {
+    @apply flex items-center justify-between
+    max-w-7xl mx-auto gap-4 px-4 py-4
+    sm:px-6 lg:px-8;
+  }
+
+  /* --- Grupo Izquierdo (Logo) --- */
+  .header-group-left {
+    @apply flex flex-shrink-0 items-center gap-3;
+  }
+
+  /* --- Grupo Derecho (Iconos/Auth) --- */
+  .header-group-right {
+    @apply flex items-center justify-end
+    gap-3 sm:gap-4;
+  }
+}

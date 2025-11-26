@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Contenedor Principal (Enlace) --- */
+  .logo-link {
+    @apply flex items-center gap-2.5 rounded-lg
+    transition-transform duration-300 ease-in-out
+    motion-reduce:transform-none hover:scale-105 active:scale-95
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500
+    focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100
+    dark:focus-visible:ring-offset-slate-900;
+  }
+
+  /* --- Estilos del Path SVG --- */
+  .logo-icon-path {
+    @apply fill-purple-500 stroke-pink-500/50
+    transition-colors duration-300 ease-in-out
+    group-hover:fill-pink-500
+    dark:fill-purple-400 dark:group-hover:fill-pink-400;
+  }
+
+  /* --- Texto del Título --- */
+  .logo-text {
+    @apply text-2xl sm:text-3xl font-extrabold
+    bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent;
+  }
+}
