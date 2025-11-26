@@ -81,6 +81,13 @@ export const router = async (app) => {
     window.location.hash = "#Login";
     return;
   }
+
+  // 2. Protección de rutas de LOGIN (Si YA eres usuario, vete al Home)
+  // Si la ruta es "Login" y el usuario SÍ está autenticado...
+  if (hash === "Login" && estaAutenticado()) {
+    window.location.hash = "/"; // Redirige al home (o tu ruta principal)
+    return;
+  }
   // return
   app.className = "";
 

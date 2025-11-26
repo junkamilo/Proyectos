@@ -7,6 +7,11 @@ import { editarUsuario } from "../../services/Users/authService";
  * @param {Function} onClose - Callback para cerrar el modal (opcional si se maneja internamente).
  */
 export const ModalEditarUsuario = (usuario, onSave, onClose) => {
+  // -----------------------------------------------------------
+  // 1. DEFINIR URL BASE DEL SERVIDOR (No del endpoint /User)
+  // -----------------------------------------------------------
+  const SERVER_URL = "http://localhost:3000"; 
+
   // 1. BACKDROP
   const overlay = document.createElement("div");
   overlay.className =
@@ -65,11 +70,32 @@ export const ModalEditarUsuario = (usuario, onSave, onClose) => {
   imgContainer.className = "relative group w-24 h-24 cursor-pointer";
 
   const imgPreview = document.createElement("img");
-  imgPreview.src =
-    usuario.url_foto_perfil ||
-    `https://ui-avatars.com/api/?name=${usuario.nombre}&background=random`;
+
+  // -----------------------------------------------------------
+  // LÓGICA DE URL CORREGIDA
+  // -----------------------------------------------------------
+  if (usuario.url_foto_perfil) {
+    if (usuario.url_foto_perfil.startsWith("http")) {
+      // Si es una imagen externa (ej. Cloudinary o Google)
+      imgPreview.src = usuario.url_foto_perfil;
+    } else {
+      // Si viene de TU base de datos (ej: /uploads/usuarios/foto.jpg)
+      // Concatenamos http://localhost:3000 + /uploads/...
+      imgPreview.src = `${SERVER_URL}${usuario.url_foto_perfil}`;
+    }
+  } else {
+    // Avatar por defecto
+    imgPreview.src = `https://ui-avatars.com/api/?name=${usuario.nombre}&background=random`;
+  }
+  // -----------------------------------------------------------
+
   imgPreview.className =
-    "w-full h-full rounded-full object-cover border-2 border-slate-600 group-hover:border-indigo-500 transition-colors";
+    "w-full h-full rounded-full object-cover border-2 border-slate-600 group-hover:border-indigo-500 transition-colors bg-slate-700";
+    
+  // Manejo de error visual (si la imagen no carga, poner default)
+  imgPreview.onerror = () => {
+     imgPreview.src = `https://ui-avatars.com/api/?name=${usuario.nombre}&background=random`;
+  };
 
   const editOverlay = document.createElement("div");
   editOverlay.className =
@@ -159,7 +185,7 @@ export const ModalEditarUsuario = (usuario, onSave, onClose) => {
     "px-4 py-2 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition-all transform active:scale-95";
 
   footer.append(btnCancel, btnSave);
-  form.append(footer); // 👈 footer dentro del form
+  form.append(footer); 
 
   modal.append(header, form);
   overlay.append(modal);
@@ -173,6 +199,7 @@ export const ModalEditarUsuario = (usuario, onSave, onClose) => {
     if (fileInput.files[0]) {
       formData.append("url_foto_perfil", fileInput.files[0]);
     } else {
+      // Importante: Mandar la ruta vieja si no se seleccionó foto nueva
       formData.append("url_foto_perfil_existente", usuario.url_foto_perfil);
     }
 
@@ -181,7 +208,7 @@ export const ModalEditarUsuario = (usuario, onSave, onClose) => {
 
     try {
       const response = await editarUsuario(usuario.id_usuario, formData);
-      alert(`Usuario actualizado: ${response.data.username}`);
+      alert(`Usuario actualizado: ${response.data.username || "Exitosamente"}`);
       if (onSave) onSave(response.data);
       closeModal();
     } catch (error) {

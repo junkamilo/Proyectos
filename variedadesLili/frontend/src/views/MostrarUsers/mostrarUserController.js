@@ -8,7 +8,7 @@ export const mostrarUserController = async () => {
   // Traemos los usuarios desde el backend
   let usuarios = [];
   try {
-    usuarios = await getUsuarios(); // retorna array de usuarios
+    usuarios = await getUsuarios();
   } catch (error) {
     console.error("Error al cargar usuarios:", error);
   }
@@ -16,7 +16,8 @@ export const mostrarUserController = async () => {
   const mainUser = await MostrarUsuarios(usuarios);
   const navarUsuario = NavUsuarios();
 
-  content.innerHTML = ""; // limpiamos cualquier contenido previo
+  // Pegamos nav + grid
+  content.innerHTML = "";
   content.append(navarUsuario.nav, mainUser);
 
   return content;

@@ -1,4 +1,8 @@
-import { editarUsuario, eliminarUsuario } from "../../services/Users/authService";
+import {
+  editarUsuario,
+  eliminarUsuario,
+} from "../../services/Users/authService";
+import { mostrarUserController } from "../../views/MostrarUsers/mostrarUserController";
 import { ModalEditarUsuario } from "../EditarUsuario/ModalEditarUsuario";
 
 const getRoleStyle = (rol) => {
@@ -20,40 +24,53 @@ const getRoleStyle = (rol) => {
 // 2. COMPONENTE TARJETA DE USUARIO
 // ==========================================
 const UserCard = (usuario) => {
+  // 1. DEFINIMOS LA URL DEL SERVIDOR (Igual que en el Modal)
+  const SERVER_URL = "http://localhost:3000";
+
   const card = document.createElement("article");
   card.className =
-    "group relative flex flex-col items-center p-6 " +
-    "bg-slate-800/40 backdrop-blur-xl " + // Fondo Glass muy sutil
-    "border border-slate-700/50 " +
-    "rounded-2xl shadow-lg " +
-    "transition-all duration-300 " +
-    "hover:bg-slate-800/60 hover:border-slate-600 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-900/20"; // Efecto levitación
+    "group relative flex flex-col items-center p-6 bg-slate-800/40 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-lg transition-all duration-300 hover:bg-slate-800/60 hover:border-slate-600 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-900/20";
 
-  // --- Avatar con Anillo de Estado ---
+  // --- Avatar ---
   const avatarContainer = document.createElement("div");
   avatarContainer.className = "relative mb-4";
 
   const img = document.createElement("img");
-  img.src =
-    usuario.url_foto_perfil ||
-    "https://ui-avatars.com/api/?name=" + usuario.nombre + "&background=random";
+
+  // 2. LÓGICA DE URL CORREGIDA (Para que detecte /uploads/...)
+  const getAvatarUrl = (u) => {
+    if (!u.url_foto_perfil) {
+      return "https://ui-avatars.com/api/?name=" + u.nombre + "&background=random";
+    }
+    // Si ya tiene http (ej: imagen de internet)
+    if (u.url_foto_perfil.startsWith("http")) {
+      return u.url_foto_perfil;
+    }
+    // Si es ruta local de tu backend, concatenamos el servidor
+    return `${SERVER_URL}${u.url_foto_perfil}`;
+  };
+
+  img.src = getAvatarUrl(usuario);
   img.alt = usuario.nombre;
   img.className =
-    "w-24 h-24 rounded-full object-cover " +
-    "border-4 border-slate-800 shadow-xl " +
-    "group-hover:scale-105 transition-transform duration-500";
+    "w-24 h-24 rounded-full object-cover border-4 border-slate-800 shadow-xl group-hover:scale-105 transition-transform duration-500 bg-slate-700";
 
-  // Badge de Rol (Flotante sobre el avatar)
+  // Manejo de error por si la imagen no carga
+  img.onerror = () => {
+    img.src = `https://ui-avatars.com/api/?name=${usuario.nombre}&background=random`;
+  };
+
   const roleBadge = document.createElement("span");
   roleBadge.textContent = usuario.rol;
-  roleBadge.className =
-    `absolute -bottom-2 left-1/2 -translate-x-1/2 ` +
-    `px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg ` +
-    getRoleStyle(usuario.rol);
+  const baseBadgeClasses =
+    "absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg ";
+  
+  // Asegúrate de que tengas la función getRoleStyle definida o importada
+  roleBadge.className = baseBadgeClasses + (typeof getRoleStyle === 'function' ? getRoleStyle(usuario.rol) : "bg-gray-500 text-white");
 
   avatarContainer.append(img, roleBadge);
 
-  // --- Info del Usuario ---
+  // --- Info ---
   const infoContainer = document.createElement("div");
   infoContainer.className = "text-center w-full mb-6";
 
@@ -65,17 +82,21 @@ const UserCard = (usuario) => {
   username.textContent = `@${usuario.username}`;
   username.className = "text-sm text-purple-400 font-medium mb-2";
 
+  // Email container
   const emailContainer = document.createElement("div");
   emailContainer.className =
     "inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-900/50 border border-slate-700/50";
-  emailContainer.innerHTML = `
-    <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-    <span class="text-xs text-slate-400 truncate max-w-[150px]">${usuario.email}</span>
-  `;
+
+  const emailText = document.createElement("span");
+  emailText.className = "text-xs text-slate-400 truncate max-w-[150px]";
+  emailText.textContent = usuario.email;
+
+  emailContainer.innerHTML = `<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>`;
+  emailContainer.append(emailText);
 
   infoContainer.append(name, username, emailContainer);
 
-  // --- Acciones (Botones) ---
+  // --- Acciones ---
   const actionsContainer = document.createElement("div");
   actionsContainer.className =
     "grid grid-cols-2 gap-3 w-full mt-auto pt-4 border-t border-slate-700/50";
@@ -83,57 +104,52 @@ const UserCard = (usuario) => {
   // Botón Editar
   const btnEdit = document.createElement("button");
   btnEdit.className =
-    "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide " +
-    "text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 hover:text-indigo-200 border border-indigo-500/20 " +
-    "transition-colors duration-200";
-  btnEdit.innerHTML = `
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-    Editar
-  `;
-  // Evento Edit (Hook)
-  // Dentro del evento onclick del botón editar:
-  btnEdit.onclick = async () => {
-    ModalEditarUsuario(
-      usuario, // El objeto con los datos actuales
-      async (formData) => {
-        // Aquí llamas a tu servicio
-        try {
-          console.log("Enviando datos...", Object.fromEntries(formData));
-          // await updateUserServices(formData);
-          await editarUsuario(formData);
-          // ProductoAgregado({ message: "Usuario actualizado" }); // Tu alerta
-          // Recargar usuarios...
-        } catch (error) {
-          console.error(error);
-        }
+    "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 hover:text-indigo-200 border border-indigo-500/20 transition-colors duration-200";
+  btnEdit.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg> Editar`;
+
+  // --- CALLBACK DE ACTUALIZACIÓN ---
+  btnEdit.onclick = () => {
+    ModalEditarUsuario(usuario, (usuarioActualizado) => {
+      // 1. Actualizar textos
+      name.textContent = usuarioActualizado.nombre;
+      username.textContent = `@${usuarioActualizado.username}`;
+      emailText.textContent = usuarioActualizado.email;
+      roleBadge.textContent = usuarioActualizado.rol;
+      
+      if (typeof getRoleStyle === 'function') {
+        roleBadge.className = baseBadgeClasses + getRoleStyle(usuarioActualizado.rol);
       }
-    );
+
+      // 2. ACTUALIZAR IMAGEN USANDO LA LÓGICA CORREGIDA
+      // Como getAvatarUrl ahora usa SERVER_URL, esto funcionará automáticamente
+      img.src = getAvatarUrl(usuarioActualizado);
+
+      // 3. Actualizar objeto local
+      Object.assign(usuario, usuarioActualizado);
+
+      // Efecto visual
+      card.classList.add("ring-2", "ring-green-500");
+      setTimeout(() => card.classList.remove("ring-2", "ring-green-500"), 1000);
+    });
   };
 
   // Botón Eliminar
   const btnDelete = document.createElement("button");
   btnDelete.className =
-    "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide " +
-    "text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 hover:text-rose-200 border border-rose-500/20 " +
-    "transition-colors duration-200";
-  btnDelete.innerHTML = `
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-    Eliminar
-  `;
-  // Evento Delete (Hook)
+    "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 hover:text-rose-200 border border-rose-500/20 transition-colors duration-200";
+  btnDelete.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Eliminar`;
+
   btnDelete.onclick = async () => {
     if (!confirm(`¿Seguro quieres eliminar a ${usuario.nombre}?`)) return;
-
     try {
       await eliminarUsuario(usuario.id_usuario);
-      card.remove(); // elimina la tarjeta de la UI
+      card.remove();
     } catch (error) {
       alert("Error al eliminar usuario: " + error.message);
     }
   };
 
   actionsContainer.append(btnEdit, btnDelete);
-
   card.append(avatarContainer, infoContainer, actionsContainer);
   return card;
 };
