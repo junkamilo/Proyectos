@@ -1,0 +1,244 @@
+@import "tailwindcss";
+
+/*
+ ---------------------------------------------------------------------------
+  CAPA BASE: Estilos fundamentales (body, #app, dark mode)
+ ---------------------------------------------------------------------------
+*/
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    /* Paleta principal (No-blanca) según los requisitos.
+      Define el fondo degradado para light mode (default) y dark mode.
+    */
+    @apply bg-gradient-to-b from-slate-50 to-slate-200 text-slate-800 antialiased
+           dark:from-slate-900 dark:to-slate-950 dark:text-slate-200;
+  }
+
+  #app {
+    /* Layout principal de la SPA.
+      Apila los componentes (Header, Main, Footer) verticalmente
+      y asegura que ocupe al menos toda la altura de la pantalla.
+    */
+    @apply flex min-h-screen flex-col;
+  }
+}
+
+/*
+ ---------------------------------------------------------------------------
+  CAPA UTILIDADES: Animaciones personalizadas y 'reduced-motion'
+ ---------------------------------------------------------------------------
+*/
+@layer utilities {
+  /* --- Definición de Keyframes --- */
+
+  /* Pulso suave para logos o elementos destacados */
+  @keyframes pulse-slow {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05); /* Pulso sutil */
+      opacity: 0.95;
+    }
+  }
+
+  /* Movimiento de degradado para títulos */
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* --- Clases de utilidad para aplicar animaciones --- */
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  .animate-gradient-shift {
+    background-size: 200% 200%; /* Necesario para que el degradado se mueva */
+    animation: gradient-shift 5s ease infinite;
+  }
+
+  /* Requisito: Respetar 'prefers-reduced-motion'.
+    Desactiva animaciones personalizadas si el usuario lo solicita.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse-slow,
+    .animate-gradient-shift {
+      animation: none;
+    }
+
+    /* Opcional: anular transiciones de Tailwind si se requiere */
+    /*
+    .transition-all,
+    .transition {
+      transition: none;
+    }
+    */
+  }
+}
+
+/*
+ ---------------------------------------------------------------------------
+  CAPA COMPONENTES: Clases de componentes (Ej. Menú Hamburguesa)
+ ---------------------------------------------------------------------------
+*/
+@layer components {
+  /* Estilos del menú desplegable (Oculto por defecto).
+    Usamos 'bg-white' como acento (permitido), con su variante dark.
+  */
+  .hamburgerMenu {
+    @apply pointer-events-none absolute right-0 top-12 z-50
+           w-56 transform rounded-lg border 
+           border-slate-200 bg-white shadow-xl
+           opacity-0 scale-95 -translate-y-2
+           transition-all duration-200 ease-out
+           
+           /* Estilos Dark mode */
+           dark:border-slate-700 dark:bg-slate-800;
+  }
+
+  /* Estado 'activo' (visible) que aplica JS */
+  .menuActivo {
+    @apply pointer-events-auto translate-y-0 scale-100 opacity-100;
+  }
+
+  /* Animación de las líneas del botón (hacia 'X')
+    cuando '.menuActivo' se aplica al <button> padre '.hamburgerBtn'.
+  */
+  .hamburgerBtn.menuActivo .line-1 {
+    @apply translate-y-2 rotate-45;
+  }
+  .hamburgerBtn.menuActivo .line-2 {
+    @apply opacity-0;
+  }
+  .hamburgerBtn.menuActivo .line-3 {
+    @apply -translate-y-2 -rotate-45;
+  }
+}
+/* --- CSS Adicional (para animaciones de entrada) --- */
+@layer utilities {
+  /* Animación de entrada para vistas/páginas */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+  }
+
+  /* Respetar reduced-motion para la nueva animación */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up {
+      animation: none;
+    }
+  }
+}
+@layer utilities {
+  /* --- Scrollbar Personalizada Dark Mode --- */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.3); /* Slate 900 alpha */
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3); /* Indigo tint */
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.6); /* Indigo más fuerte */
+  }
+
+  /* --- Animaciones Utilitarias --- */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-down {
+    animation: fadeInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+//modal
+@layer utilities {
+  .animate-scale-up {
+    animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes scaleUp {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

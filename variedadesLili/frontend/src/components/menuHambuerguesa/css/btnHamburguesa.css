@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Botón Hamburguesa (Contenedor) --- */
+  .hamburger-btn {
+    @apply flex flex-col justify-center items-center gap-1.5 p-2 rounded-lg
+    transition-colors duration-300 ease-in-out
+    hover:bg-slate-500/10 dark:hover:bg-slate-500/20
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500
+    focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100
+    dark:focus-visible:ring-offset-slate-900;
+  }
+
+  /* --- Líneas del Icono --- */
+  .hamburger-line {
+    @apply block w-6 h-0.5 rounded-full
+    transition-all duration-300 ease-in-out
+    bg-slate-900 dark:bg-slate-200;
+  }
+}

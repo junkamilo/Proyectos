@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Reutilización de estructura de Grupo y Label (Si ya existen, se pueden omitir) --- */
+  .input-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .input-label {
+    @apply text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1
+    transition-colors
+    group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400;
+  }
+
+  /* --- Wrapper Relativo para Iconos --- */
+  .input-wrapper {
+    @apply relative w-full;
+  }
+
+  /* --- Icono (SVG) dentro del input --- */
+  .input-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2
+    text-slate-400
+    transition-colors
+    group-focus-within:text-purple-500
+    pointer-events-none;
+  }
+
+  /* --- Select (Input con Icono) --- */
+  .form-select {
+    @apply w-full rounded-lg border border-slate-300 dark:border-slate-600
+    bg-slate-50 dark:bg-slate-900/50
+    text-slate-900 dark:text-white
+    pl-10 pr-4 py-2.5 shadow-sm
+    transition-all duration-300 ease-in-out
+    focus:bg-white dark:focus:bg-slate-950
+    focus:border-purple-500
+    focus:outline-none focus:ring-4 focus:ring-purple-500/20;
+  }
+}

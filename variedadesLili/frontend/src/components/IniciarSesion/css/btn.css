@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@layer components {
+  .btnSubmit {
+    @apply w-full mt-4 py-3.5 px-4 rounded-xl font-bold text-white shadow-lg
+    /* Fondo y Gradiente */
+    bg-gradient-to-r from-purple-600 to-pink-600
+    /* Interacción Hover */
+    hover:from-purple-700 hover:to-pink-700
+    hover:shadow-purple-500/40 hover:-translate-y-0.5
+    /* Interacción Active (Click) */
+    active:translate-y-0
+    /* Accesibilidad (Focus) */
+    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+    /* Transiciones */
+    transition-all duration-300;
+  }
+}

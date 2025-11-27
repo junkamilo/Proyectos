@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Grupo y Label (Estructura base) --- */
+  .input-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .input-label {
+    @apply text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1
+    /* Transiciones */
+    transition-colors
+    /* Interacción con Grupo */
+    group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400;
+  }
+
+  /* --- Wrapper Relativo --- */
+  .input-wrapper {
+    @apply relative w-full;
+  }
+
+  /* --- Icono (Cubo) --- */
+  .input-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2
+    /* Colores */
+    text-slate-400
+    /* Transiciones */
+    transition-colors
+    /* Interacción con Grupo */
+    group-focus-within:text-purple-500
+    /* Comportamiento */
+    pointer-events-none;
+  }
+
+  /* --- Select con Padding Izquierdo (Para el icono) --- */
+  .form-select {
+    @apply w-full rounded-lg border border-slate-300 dark:border-slate-600
+    /* Fondo y Texto */
+    bg-slate-50 dark:bg-slate-900/50
+    text-slate-900 dark:text-white
+    /* Padding: pl-10 deja espacio para el icono a la izquierda */
+    pl-10 pr-4 py-2.5 shadow-sm
+    /* Transiciones */
+    transition-all duration-300 ease-in-out
+    /* Focus */
+    focus:bg-white dark:focus:bg-slate-950
+    focus:border-purple-500
+    focus:outline-none focus:ring-4 focus:ring-purple-500/20;
+  }
+}

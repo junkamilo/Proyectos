@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/*estilos del create input del icono*/
+@layer components {
+  /* Contenedor principal del input */
+  .inputGroup {
+    @apply flex flex-col gap-1.5;
+  }
+
+  /* Etiqueta (Label) */
+  .inputLabel {
+    @apply text-xs font-bold text-slate-500 uppercase tracking-wide ml-1 
+           transition-colors group-focus-within/input:text-purple-600;
+  }
+
+  /* Wrapper relativo para posicionar el icono */
+  .inputWrapper {
+    @apply relative;
+  }
+
+  /* Contenedor del Icono SVG */
+  .inputIconContainer {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none
+           text-slate-400 transition-colors group-focus-within/input:text-purple-500;
+  }
+
+  /* Campo de Input */
+  .inputField {
+    @apply w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium
+           /* Colores Base y Dark Mode */
+           bg-slate-50 dark:bg-slate-900/50
+           border border-slate-200 dark:border-slate-700
+           text-slate-900 dark:text-white
+           /* Estados de Foco */
+           focus:bg-white dark:focus:bg-slate-950
+           focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 focus:outline-none
+           /* Transiciones */
+           transition-all duration-300;
+  }
+}

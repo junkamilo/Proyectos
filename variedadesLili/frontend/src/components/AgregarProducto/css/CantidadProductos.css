@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Grupo del Input --- */
+  .input-group {
+    @apply flex flex-col gap-2;
+  }
+
+  /* --- Etiqueta (Label) --- */
+  .input-label {
+    @apply text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1
+    transition-colors
+    group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400;
+  }
+
+  /* --- Input Numérico --- */
+  .form-input {
+    @apply w-full rounded-lg border border-slate-300 dark:border-slate-600
+    bg-slate-50 dark:bg-slate-900/50
+    text-slate-900 dark:text-white
+    px-4 py-2.5 shadow-sm
+    placeholder:text-slate-400 dark:placeholder:text-slate-500
+    transition-all duration-300 ease-in-out
+    focus:bg-white dark:focus:bg-slate-950
+    focus:border-purple-500
+    focus:outline-none focus:ring-4 focus:ring-purple-500/20;
+  }
+}

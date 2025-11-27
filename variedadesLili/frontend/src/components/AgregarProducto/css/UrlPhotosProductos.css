@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Grupo (2 Columnas) --- */
+  .input-group-wide {
+    @apply flex flex-col gap-2 md:col-span-2;
+  }
+
+  /* --- Label --- */
+  .input-label {
+    @apply text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1
+    transition-colors group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400;
+  }
+
+  /* --- Zona de Carga (Contenedor) --- */
+  .upload-zone {
+    @apply relative w-full h-52 rounded-xl
+    /* Estado Base (Vacío) */
+    bg-slate-50 dark:bg-slate-900/50
+    border-2 border-dashed border-slate-300 dark:border-slate-600
+    /* Layout */
+    flex flex-col justify-center items-center cursor-pointer overflow-hidden
+    /* Transiciones */
+    transition-all duration-300 ease-in-out
+    /* Hover Effects */
+    hover:bg-purple-50 dark:hover:bg-purple-900/20
+    hover:border-purple-500 dark:hover:border-purple-400;
+  }
+
+  /* --- Estado Activo (Con Archivo) --- */
+  .upload-zone.has-file {
+    @apply border-solid border-purple-500 bg-white dark:bg-slate-800;
+  }
+
+  /* --- Contenido Placeholder (Texto/Icono) --- */
+  .upload-placeholder {
+    @apply flex flex-col items-center text-slate-400 dark:text-slate-500
+    transition-colors duration-300
+    /* Hover del padre (.upload-zone) */
+    group-hover/zone:text-purple-600 dark:group-hover/zone:text-purple-400;
+  }
+
+  /* --- Icono de Nube --- */
+  .upload-icon {
+    @apply h-12 w-12 mb-3 transition-transform duration-300
+    /* Animación en hover del padre */
+    group-hover/zone:-translate-y-1;
+  }
+
+  /* --- Vista Previa de Imagen --- */
+  .upload-preview {
+    @apply absolute inset-0 w-full h-full object-contain
+    bg-white dark:bg-slate-800 p-2;
+  }
+}

@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Enlace del Menú --- */
+  .menu-link {
+    @apply flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-md
+    transition-colors duration-200 ease-in-out
+    text-slate-700 dark:text-slate-200
+    hover:bg-purple-100 hover:text-purple-600
+    dark:hover:bg-purple-900/50 dark:hover:text-purple-400
+    focus:outline-none focus:bg-purple-100 focus:text-purple-600
+    dark:focus:bg-purple-900/50 dark:focus:text-purple-400;
+  }
+
+  /* --- Icono del Menú --- */
+  .menu-link-icon {
+    @apply w-5 h-5 opacity-80 transition-opacity group-hover:opacity-100;
+  }
+}

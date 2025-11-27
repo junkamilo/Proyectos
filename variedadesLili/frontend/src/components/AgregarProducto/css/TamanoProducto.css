@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Reutilizables de Formulario --- */
+  .input-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .input-label {
+    @apply text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1
+    /* Transiciones */
+    transition-colors
+    /* Interacción con Grupo */
+    group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400;
+  }
+
+  .input-wrapper {
+    @apply relative w-full;
+  }
+
+  /* --- Select con Flecha Personalizada --- */
+  /* Reutiliza el estilo definido en EstadoProducto */
+  .form-select-arrow {
+    @apply w-full rounded-lg border border-slate-300 dark:border-slate-600
+    /* Fondo y Texto */
+    bg-slate-50 dark:bg-slate-900/50
+    text-slate-900 dark:text-white
+    /* Padding (pr-10 para la flecha) */
+    pl-4 pr-10 py-2.5 shadow-sm
+    /* Reset Nativo */
+    appearance-none cursor-pointer
+    /* Transiciones */
+    transition-all duration-300 ease-in-out
+    /* Focus */
+    focus:bg-white dark:focus:bg-slate-950
+    focus:border-purple-500
+    focus:outline-none focus:ring-4 focus:ring-purple-500/20;
+  }
+
+  /* --- Opciones del Select --- */
+  .form-option {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200;
+  }
+
+  /* --- Icono de Flecha (Derecha) --- */
+  .select-arrow-icon {
+    @apply absolute right-3 top-1/2 -translate-y-1/2
+    /* Comportamiento */
+    pointer-events-none
+    /* Colores */
+    text-slate-500
+    /* Transiciones */
+    transition-colors
+    /* Interacción con Grupo */
+    group-hover:text-purple-600;
+  }
+}
