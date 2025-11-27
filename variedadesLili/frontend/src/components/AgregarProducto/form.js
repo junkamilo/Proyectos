@@ -8,6 +8,8 @@ import { NameProductos } from "./NameProductos";
 import { PrecioProducto } from "./PrecioProducto";
 import { TamanoProducto } from "./TamanoProducto";
 import { UrlPhotosProductos } from "./UrlPhotosProductos";
+import "./css/form.css";
+
 
 const formulario = () => {
   //instanciamos los componentes del formualrio

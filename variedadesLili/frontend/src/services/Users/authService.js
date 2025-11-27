@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:3000/User";
 
+//iniciar sesion
 export const loginUser = async (identifier, contrasena) => {
   try {
     const res = await fetch(`${API_URL}/login`, {
@@ -81,5 +82,34 @@ export const editarUsuario = async (id, formData) => {
   } catch (error) {
     console.error("[editarUsuario]", error);
     throw error;
+  }
+};
+//usuario por id
+export const getUserById = async (id) => {
+  try {
+    // 1. Es buena práctica enviar el token si la ruta es privada
+    // const token = localStorage.getItem('token');
+
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await res.json();
+
+    // 2. Si el backend responde con error (ej: 404 o 500), lanzamos el mensaje del backend
+    if (!res.ok) {
+      throw new Error(result.message || "Error al obtener usuario");
+    }
+
+    // 3. Retornamos el objeto del usuario directamente.
+    // Usamos null si no hay data, ya que esperamos un OBJETO, no un array [].
+    return result.data || null;
+  } catch (error) {
+    console.error("[getUserById] Error:", error.message);
+    // Retornamos null para que la vista sepa que no hay usuario que mostrar
+    return null;
   }
 };

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@layer components {
+  /* --- Reutilizables --- */
+  .input-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .input-label {
+    @apply text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1
+    /* Transiciones */
+    transition-colors
+    /* Interacción con Grupo */
+    group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400;
+  }
+
+  .input-wrapper {
+    @apply relative w-full;
+  }
+
+  /* --- Símbolo de Moneda ($) --- */
+  .currency-symbol {
+    @apply absolute left-3 top-1/2 -translate-y-1/2
+    /* Tipografía y Color */
+    text-slate-400 dark:text-slate-500 font-medium
+    /* Comportamiento */
+    pointer-events-none;
+  }
+
+  /* --- Input de Precio (Padding específico para $) --- */
+  .form-input-currency {
+    @apply w-full rounded-lg border border-slate-300 dark:border-slate-600
+    /* Fondo y Texto */
+    bg-slate-50 dark:bg-slate-900/50
+    text-slate-900 dark:text-white
+    /* Padding: pl-8 deja espacio para el símbolo $ */
+    pl-8 pr-4 py-2.5 shadow-sm
+    /* Placeholder */
+    placeholder:text-slate-400 dark:placeholder:text-slate-500
+    /* Transiciones */
+    transition-all duration-300 ease-in-out
+    /* Focus */
+    focus:bg-white dark:focus:bg-slate-950
+    focus:border-purple-500
+    focus:outline-none focus:ring-4 focus:ring-purple-500/20;
+  }
+}
