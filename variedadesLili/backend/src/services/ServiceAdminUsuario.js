@@ -19,6 +19,36 @@ export class ServiceAdminUsuario {
     }
   }
 
+  //treamos usuario por su id
+  static async getUserById(id) {
+    try {
+      const user = await AdminUsuario.findById(id);
+
+      if (!user) {
+        return {
+          error: true,
+          code: 404,
+          message: "Usuario no encontrado",
+        };
+      }
+
+      // --- MEJORA DE SEGURIDAD ---
+      // Eliminamos datos sensibles que no deben llegar al frontend
+      delete user.contrasena;
+      delete user.refreshToken;
+
+      return {
+        error: false,
+        code: 200,
+        message: "Información de usuario obtenida exitosamente",
+        data: user,
+      };
+    } catch (error) {
+      console.error("[ServiceAdminUsuario:getUserById] Error:", error);
+      return { error: true, code: 500, message: "Error interno del servidor" };
+    }
+  }
+
   //usuario por el username y contrasena
   static async login(identifier, contrasena) {
     try {

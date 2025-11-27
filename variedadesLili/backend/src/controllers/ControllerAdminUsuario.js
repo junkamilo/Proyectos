@@ -20,6 +20,29 @@ export class ControllerAdminUsuario {
     }
   };
 
+  //obtenemos un usuario por su id
+  static getUser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const response = await ServiceAdminUsuario.getUserById(id);
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      console.error("[ControllerAdminUsuario:getUser] Error:", error);
+      return ResponseProvider.error(res, "Error interno del servidor", 500);
+    }
+  };
+
   //login
   static login = async (req, res) => {
     const { identifier, contrasena } = req.body;

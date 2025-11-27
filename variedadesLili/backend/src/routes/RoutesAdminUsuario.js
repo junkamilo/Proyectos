@@ -9,6 +9,8 @@ router.post(
   "/register",uploadUsuario.single("url_foto_perfil"),ControllerAdminUsuario.register
 );
 
+router.get("/:id", ControllerAdminUsuario.getUser);
+
 //treamos todos los usuarios
 router.get("/all", ControllerAdminUsuario.getAllUsers);
 
