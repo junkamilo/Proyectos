@@ -6,6 +6,9 @@ export const userProfileController = async () => {
     const dataUSer = await getUserById(1);
     
     const content = document.querySelector(".Profileview");
+
+    content.innerHTML = "";
+
     const profileView = UserProfileView(dataUSer);
     
     content.append(profileView);

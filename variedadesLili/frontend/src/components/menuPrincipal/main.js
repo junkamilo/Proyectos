@@ -4,6 +4,7 @@ import ComprasPedidos from "./ComprasPedidos";
 import EliminarProductos from "./EliminarProductos";
 import Inventario from "./Inventario";
 import ModificarProductos from "./ModificarProductos";
+import UserRegistrados from "./usersRegistrados";
 
 const main = () => {
 
@@ -14,6 +15,7 @@ const main = () => {
   const inventarioProductos = Inventario();
   const pedidos = ComprasPedidos();
   const nuevoUser = AgregarUser();
+  const UsuariosRegisters = UserRegistrados();
 
   // Contenedor principal (<main>)
   const container = document.createElement("main");
@@ -47,7 +49,8 @@ const main = () => {
     deleteProduct,
     inventarioProductos,
     pedidos,
-    nuevoUser
+    nuevoUser,
+    UsuariosRegisters
   );
 
   innerWrapper.append(title, content);

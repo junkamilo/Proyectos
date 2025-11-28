@@ -10,6 +10,7 @@ import { ModificarProductosController } from "../views/ModificarProductos/Modifi
 import { mostrarUserController } from "../views/MostrarUsers/mostrarUserController";
 import { PedidosController } from "../views/Pedidos/PedidosController";
 import { userProfileController } from "../views/UserProfile/userProfileController";
+import { userRegisterController } from "../views/UsuariosRegistrados/userRegisterController";
 
 const routes = {
   "/": {
@@ -40,6 +41,11 @@ const routes = {
   ProFileView: {
     template: "UserProfile/userProfile.html",
     controlador: userProfileController,
+    private: true,
+  },
+  UserRegisters: {
+    template: "UsuariosRegistrados/userRegister.html",
+    controlador: userRegisterController,
     private: true,
   },
   EliminarProductos: {

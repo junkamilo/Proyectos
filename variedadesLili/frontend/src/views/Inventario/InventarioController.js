@@ -1,10 +1,11 @@
-import { TablaInventario } from "../../components/Inventario/Tabla";
+import { DashboardInventario } from "../../components/Inventario/DashboardInventario";
+
 
 export const InventarioController = () => {
   const content = document.querySelector(".containerInventario");
-  const tablaInfo = TablaInventario();
+  const Inventario = DashboardInventario();
 
-  content.append(tablaInfo);
+  content.append(Inventario);
 
   return content;
 };

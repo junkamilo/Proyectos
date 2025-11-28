@@ -4,23 +4,30 @@ import { uploadUsuario } from "../middlewares/auth/uploadUsuario.js";
 
 const router = express.Router();
 
-// Ruta para registrar usuario  
+// Ruta para registrar usuario
 router.post(
-  "/register",uploadUsuario.single("url_foto_perfil"),ControllerAdminUsuario.register
+  "/register",
+  uploadUsuario.single("url_foto_perfil"),
+  ControllerAdminUsuario.register
 );
 
-router.get("/:id", ControllerAdminUsuario.getUser);
-
-//treamos todos los usuarios
+// ✅ CORRECTO: Primero las rutas estáticas (específicas)
 router.get("/all", ControllerAdminUsuario.getAllUsers);
 
-//ruta para iniciar sesion
+// ✅ LUEGO: Las rutas dinámicas (que atrapan variables)
+router.get("/:id", ControllerAdminUsuario.getUser);
+
+// Ruta para iniciar sesión
 router.post("/login", ControllerAdminUsuario.login);
 
-//eliminamos usuario por id
+// Eliminamos usuario por id
 router.delete("/:id", ControllerAdminUsuario.deleteUser);
 
-// Actualizar usuario (con foto opcional)
-router.put("/:id", uploadUsuario.single("url_foto_perfil"), ControllerAdminUsuario.updateUser);
+// Actualizar usuario
+router.put(
+  "/:id",
+  uploadUsuario.single("url_foto_perfil"),
+  ControllerAdminUsuario.updateUser
+);
 
 export default router;
