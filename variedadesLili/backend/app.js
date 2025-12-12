@@ -5,6 +5,7 @@ import cors from "cors";
 //rutas
 import RoutesAdminUsuario from './src/routes/RoutesAdminUsuario.js';
 import RoutesProductos from './src/routes/RoutesProductos.js';
+import RoutesCliente from './src/routes/RoutesCliente.js';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -23,6 +24,7 @@ app.use("/uploads", express.static("uploads"));
 // Rutas del resto de módulos
 app.use('/User', RoutesAdminUsuario);
 app.use('/AddProductos', RoutesProductos);
+app.use('/api', RoutesCliente);
 
 
 // Puerto y arranque del servidor

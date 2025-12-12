@@ -1,7 +1,8 @@
  import { AvatarFlotante } from "./AvatarFlotante";
 import { cardProfile } from "./cardProfile";
 import { cardSecuriti } from "./cardSecurity";
-import { identitysections } from "./identitysection";
+import { identitysections } from "./identitysection.js";
+
 
 export const UserProfileView = (usuario) => {
   //instanciamos componentes

@@ -5,11 +5,7 @@ import { uploadUsuario } from "../middlewares/auth/uploadUsuario.js";
 const router = express.Router();
 
 // Ruta para registrar usuario
-router.post(
-  "/register",
-  uploadUsuario.single("url_foto_perfil"),
-  ControllerAdminUsuario.register
-);
+router.post("/register",uploadUsuario.single("url_foto_perfil"),ControllerAdminUsuario.register);
 
 // ✅ CORRECTO: Primero las rutas estáticas (específicas)
 router.get("/all", ControllerAdminUsuario.getAllUsers);
@@ -24,10 +20,6 @@ router.post("/login", ControllerAdminUsuario.login);
 router.delete("/:id", ControllerAdminUsuario.deleteUser);
 
 // Actualizar usuario
-router.put(
-  "/:id",
-  uploadUsuario.single("url_foto_perfil"),
-  ControllerAdminUsuario.updateUser
-);
+router.put("/:id",uploadUsuario.single("url_foto_perfil"),ControllerAdminUsuario.updateUser);
 
 export default router;
