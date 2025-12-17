@@ -1,57 +1,5 @@
-// --- MOCK DATA (Datos simulados de usuarios) ---
-const mockUsuarios = [
-  {
-    id: 1,
-    nombre: "Valentina Herrera",
-    email: "valentina.h@gmail.com",
-    telefono: "+57 300 123 4567",
-    rol: "admin", // admin, cliente
-    estado: "online", // online, offline
-    fechaRegistro: "12 Oct 2023",
-    avatar: "https://i.pravatar.cc/150?u=valen",
-    compras: 0,
-  },
-  {
-    id: 2,
-    nombre: "Juan Camilo Pérez",
-    email: "juan.camilo.perez@outlook.com",
-    telefono: "+57 312 987 6543",
-    rol: "cliente",
-    estado: "offline",
-    fechaRegistro: "05 Nov 2023",
-    avatar: "https://i.pravatar.cc/150?u=juan",
-    compras: 12,
-  },
-  {
-    id: 3,
-    nombre: "Maria Fernanda Y.",
-    email: "mafe.yepes@company.com",
-    telefono: "+57 315 555 1122",
-    rol: "cliente",
-    estado: "online",
-    fechaRegistro: "Ayer",
-    avatar: "https://i.pravatar.cc/150?u=mafe",
-    compras: 3,
-  },
-  {
-    id: 4,
-    nombre: "Carlos 'El Cliente'",
-    email: "carlos.test@email.com",
-    telefono: "N/A",
-    rol: "cliente",
-    estado: "offline",
-    fechaRegistro: "20 Ene 2024",
-    avatar: null, // Sin avatar (prueba fallback)
-    compras: 1,
-  },
-];
-
-export const DashboardUsuarios = () => {
-  /* NOTAS DE DISEÑO (SPA COHERENCE - "User Directory"):
-     - Layout: Grid de tarjetas (Identity Cards).
-     - Interacción: Botones de contacto directos ('mailto:', 'tel:').
-     - Visual: Avatares grandes con indicadores de estado.
-  */
+export const DashboardUsuarios = (getAllClients) => {
+  const clients = getAllClients?.data || [];
 
   const container = document.createElement("div");
   container.className =
@@ -69,13 +17,14 @@ export const DashboardUsuarios = () => {
     "text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent";
 
   const subtitle = document.createElement("p");
-  subtitle.innerHTML = `Gestión total de <span class="font-bold text-slate-800 dark:text-white">${mockUsuarios.length}</span> usuarios registrados.`;
+  // CAMBIO: Usamos clients.length en lugar de mockUsuarios
+  subtitle.innerHTML = `Gestión total de <span class="font-bold text-slate-800 dark:text-white">${clients.length}</span> usuarios registrados.`;
   subtitle.className =
     "text-sm text-slate-500 dark:text-slate-400 font-medium mt-1";
 
   titleGroup.append(title, subtitle);
 
-  // Search Bar (Glass Style)
+  // Search Bar
   const searchWrapper = document.createElement("div");
   searchWrapper.className = "relative w-full md:w-80 group";
 
@@ -94,6 +43,21 @@ export const DashboardUsuarios = () => {
     "text-slate-800 dark:text-white " +
     "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white dark:focus:bg-slate-900 transition-all";
 
+  // Lógica simple de búsqueda en el cliente
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    const cards = usersGrid.querySelectorAll(".user-card-item");
+    cards.forEach((card) => {
+      const name = card.dataset.name.toLowerCase();
+      const email = card.dataset.email.toLowerCase();
+      if (name.includes(term) || email.includes(term)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+
   searchWrapper.append(searchIcon, searchInput);
   header.append(titleGroup, searchWrapper);
   container.append(header);
@@ -104,13 +68,29 @@ export const DashboardUsuarios = () => {
 
   // --- HELPER: CARD DE USUARIO ---
   const createUserCard = (user) => {
+    // CAMBIO: Definimos valores por defecto para datos que no vienen en la API
+    const userRole = user.rol || "Cliente"; // Fallback
+    const userStatus = user.estado || "online"; // Fallback
+    const userCompras = user.compras || 0; // Fallback
+
+    // Formatear fecha (usamos nacimiento o fecha actual si no hay registro)
+    const rawDate = user.fecha_nacimiento || new Date().toISOString();
+    const formattedDate = new Date(rawDate).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
     const card = document.createElement("div");
+    // Añadimos clase y dataset para el buscador
     card.className =
-      "group relative overflow-hidden rounded-2xl p-6 " +
+      "user-card-item group relative overflow-hidden rounded-2xl p-6 " +
       "bg-white/80 dark:bg-slate-800/90 backdrop-blur-xl " +
       "border border-white/50 dark:border-slate-700 " +
       "shadow-xl shadow-purple-900/5 hover:shadow-purple-900/15 " +
       "transition-all duration-300 hover:-translate-y-1";
+    card.dataset.name = user.nombre_completo || "";
+    card.dataset.email = user.email || "";
 
     // Header: Avatar + Rol
     const cardHeader = document.createElement("div");
@@ -121,26 +101,28 @@ export const DashboardUsuarios = () => {
     avatarWrapper.className = "relative";
 
     const img = document.createElement("img");
+    // CAMBIO: Usamos nombre_completo para el avatar generado
     img.src =
-      user.avatar ||
-      "https://ui-avatars.com/api/?background=random&name=" + user.nombre;
-    img.alt = user.nombre;
+      user.url_foto_perfil ||
+      "https://ui-avatars.com/api/?background=random&name=" +
+        encodeURIComponent(user.nombre_completo);
+    img.alt = user.nombre_completo;
     img.className =
       "w-16 h-16 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-md";
 
-    // Indicador de Estado (Punto Verde/Gris)
+    // Indicador de Estado
     const statusDot = document.createElement("span");
     const statusColor =
-      user.estado === "online" ? "bg-green-500" : "bg-slate-400";
+      userStatus === "online" ? "bg-green-500" : "bg-slate-400";
     statusDot.className = `absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white dark:border-slate-800 ${statusColor}`;
 
     avatarWrapper.append(img, statusDot);
 
     // Badge de Rol
     const roleBadge = document.createElement("span");
-    roleBadge.textContent = user.rol;
+    roleBadge.textContent = userRole;
     const roleClass =
-      user.rol === "admin"
+      userRole === "admin"
         ? "bg-purple-100 text-purple-700 border-purple-200"
         : "bg-blue-50 text-blue-600 border-blue-100";
     roleBadge.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${roleClass}`;
@@ -152,22 +134,24 @@ export const DashboardUsuarios = () => {
     userInfo.className = "mb-6";
 
     const name = document.createElement("h3");
-    name.textContent = user.nombre;
+    // CAMBIO: Propiedad real nombre_completo
+    name.textContent = user.nombre_completo;
     name.className =
       "text-lg font-bold text-slate-800 dark:text-white truncate";
 
     const joinDate = document.createElement("p");
-    joinDate.textContent = `Registrado: ${user.fechaRegistro}`;
+    // CAMBIO: Usamos la fecha formateada
+    joinDate.textContent = `Nacimiento: ${formattedDate}`;
     joinDate.className =
       "text-xs text-slate-400 dark:text-slate-500 font-medium mb-3";
 
-    // Stats rápidas (Ej: Compras)
+    // Stats rápidas
     const statsRow = document.createElement("div");
     statsRow.className =
       "flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/50 p-2 rounded-lg w-fit";
     statsRow.innerHTML = `
       <svg class="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-      <span>${user.compras} Pedidos realizados</span>
+      <span>${userCompras} Pedidos</span>
     `;
 
     userInfo.append(name, joinDate, statsRow);
@@ -190,8 +174,9 @@ export const DashboardUsuarios = () => {
 
     // Botón Teléfono (Condicional)
     const phoneBtn = document.createElement("a");
-    if (user.telefono && user.telefono !== "N/A") {
-      phoneBtn.href = `tel:${user.telefono}`; // Llama al teléfono
+    // CAMBIO: Validación robusta del teléfono
+    if (user.telefono && user.telefono.trim() !== "") {
+      phoneBtn.href = `tel:${user.telefono}`;
       phoneBtn.className =
         "flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-colors " +
         "text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/30 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-900/20 dark:hover:text-green-400";
@@ -200,7 +185,6 @@ export const DashboardUsuarios = () => {
         Llamar
       `;
     } else {
-      // Estado deshabilitado si no hay teléfono
       phoneBtn.className =
         "flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold text-slate-300 dark:text-slate-600 cursor-not-allowed bg-slate-50 dark:bg-slate-800/50";
       phoneBtn.innerHTML = `<span>Sin teléfono</span>`;
@@ -211,10 +195,20 @@ export const DashboardUsuarios = () => {
     return card;
   };
 
-  // Renderizar usuarios
-  mockUsuarios.forEach((user) => {
-    usersGrid.append(createUserCard(user));
-  });
+  // Renderizar usuarios reales
+  // CAMBIO: Iteramos sobre clients en lugar de mockUsuarios
+  if (clients.length > 0) {
+    clients.forEach((user) => {
+      usersGrid.append(createUserCard(user));
+    });
+  } else {
+    // Mensaje de estado vacío si no hay clientes
+    const emptyState = document.createElement("div");
+    emptyState.className =
+      "col-span-full text-center py-12 text-slate-500 italic";
+    emptyState.textContent = "No se encontraron usuarios registrados.";
+    usersGrid.append(emptyState);
+  }
 
   container.append(usersGrid);
   return container;
