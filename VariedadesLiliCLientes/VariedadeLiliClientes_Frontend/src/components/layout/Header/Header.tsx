@@ -47,6 +47,7 @@ export default function Header() {
                             onToggleMenu={toggleMenu}
                             isMenuOpen={mobileMenuOpen}
                             isAuthenticated={isAuthenticated}
+                            logout={logout}
                         />
                     </div>
 

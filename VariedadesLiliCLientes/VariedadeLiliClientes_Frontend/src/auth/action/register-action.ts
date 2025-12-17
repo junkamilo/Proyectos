@@ -14,8 +14,16 @@ export const registerUser = async (formData: RegisterFormData): Promise<Register
         data.append("email", formData.email);
         data.append("contrasena", formData.contrasena);
         data.append("telefono", formData.telefono);
-        data.append("fecha_nacimiento", formData.fecha_nacimiento);
-        data.append("genero", formData.genero);
+
+
+
+        if (formData.fecha_nacimiento) {
+            data.append("fecha_nacimiento", formData.fecha_nacimiento);
+        }
+
+        if (formData.genero) {
+            data.append("genero", formData.genero);
+        }
 
         // 3. Agregar la imagen SOLO si el usuario seleccionó una
         if (formData.url_foto_perfil && formData.url_foto_perfil.length > 0) {

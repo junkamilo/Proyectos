@@ -9,13 +9,11 @@ interface InputGroupProps {
     icon: LucideIcon;
     placeholder?: string;
     error?: string;
-    // CAMBIO 1: 'value' ahora es opcional porque el input file no lo usa
     value?: string | number;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     options?: { value: string; label: string }[];
     showPassword?: boolean;
     togglePasswordVisibility?: () => void;
-    // CAMBIO 2: Agregamos 'accept' para validar tipos de archivos (ej: imagenes)
     accept?: string;
 }
 

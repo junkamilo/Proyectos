@@ -1,66 +1,110 @@
-import { useState } from "react"
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router';
+import { loginUser } from '../action/login-action';
+import type { LoginFormData } from '../types/LoginFormData';
 
 export const useLoginForm = () => {
-    // 1. ESTADOS
-    const [formData, setFormData] = useState({
+
+    const navigate = useNavigate();
+    const { login } = useAuth(); // Traemos la función para guardar sesión
+
+    // 1. ESTADO
+    const [formData, setFormData] = useState<LoginFormData>({
         email: "",
         contrasena: "",
         recordar: false
-    })
+    });
 
-    const [errors, setErrors] = useState<Record<string, string>>({})
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    // 2. TOGGLES
-    const togglePasswordVisibility = () => setShowPassword((prev) => !prev)
+    // 2. HANDLERS
+    const togglePasswordVisibility = () => setShowPassword(prev => !prev);
 
-    // 3. HANDLERS
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target
+        const { name, value, type, checked } = e.target;
+
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
-        }))
-        // Limpiar error al escribir
-        if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }))
-    }
+        }));
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsSubmitting(true)
-
-        // Validación simple
-        const newErrors: Record<string, string> = {}
-        if (!formData.email) newErrors.email = "Ingresa tu email"
-        if (!formData.contrasena) newErrors.contrasena = "Ingresa tu contraseña"
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors)
-            setIsSubmitting(false)
-            return
+        // Limpiamos el error específico de ese campo al escribir
+        if (errors[name]) {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
         }
+    };
 
-        // Simulación API
+    // 3. VALIDACIÓN
+    const validate = () => {
+        const newErrors: Record<string, string> = {};
+        if (!formData.email) newErrors.email = "El correo es requerido";
+        if (!formData.contrasena) newErrors.contrasena = "La contraseña es requerida";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    // 3. SUBMIT (LÓGICA PRINCIPAL)
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!validate()) return;
+
+        setIsSubmitting(true);
+
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500))
-            alert("¡Bienvenido de nuevo!")
-            // Aquí podrías redirigir: router.push('/dashboard')
-        } catch (error) {
-            setErrors({ form: "Error al iniciar sesión" })
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
+            // A. Petición al Backend
+            const response = await loginUser(formData);
 
-    // 4. RETORNO
+            console.log("Login respuesta:", response);
+
+            // B. Verificamos éxito
+            if (response.status === 'success' && response.data) {
+
+                const backendUser = response.data;
+
+                // C. MAPEO (Backend -> Frontend)
+                // Igual que hicimos en el registro
+                const userForContext = {
+                    id: backendUser.id_cliente, // id_cliente -> id
+                    nombre_completo: backendUser.nombre_completo,
+                    email: backendUser.email,
+                    url_foto_perfil: backendUser.url_foto_perfil,
+                    telefono: backendUser.telefono,
+                    token: backendUser.token
+                };
+
+                // D. Guardamos sesión
+                login(userForContext);
+
+                // E. Redirección inmediata al Home
+                navigate('/');
+            }
+
+        } catch (error: any) {
+            console.error(error);
+            setErrors({
+                email: error.message || "Error al iniciar sesión",
+                contrasena: error.message || ""
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return {
         formData,
         errors,
         isSubmitting,
         showPassword,
-        togglePasswordVisibility,
         handleChange,
-        handleSubmit
-    }
-}
+        handleSubmit,
+        togglePasswordVisibility
+    };
+};

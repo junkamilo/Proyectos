@@ -1,6 +1,7 @@
 
 import {Mail, Lock, Eye, EyeOff, ArrowRight,Loader2, Fingerprint,Github, Chrome} from "lucide-react"
 import { useLoginForm } from "../Hooks/useLoginForm"
+import { Link } from "react-router"
 
 // Importamos la lógica separada
 
@@ -167,9 +168,9 @@ export default function LoginForm() {
 
                     <p className="mt-8 text-center text-slate-500 text-sm">
                         ¿Aún no tienes cuenta?{" "}
-                        <a href="/registro" className="font-bold text-slate-900 dark:text-white hover:underline">
+                        <Link to={'/register'} className="font-bold text-slate-900 dark:text-white hover:underline">
                             Regístrate gratis
-                        </a>
+                        </Link>
                     </p>
                 </div>
 

@@ -1,5 +1,6 @@
+import { useAuth } from "@/auth/context/AuthContext"
 import { useState, useEffect } from "react"
-import { useAuth } from "@/auth/context/AuthProvider" // Asegúrate que esta ruta sea la correcta en tu proyecto
+ // Asegúrate que esta ruta sea la correcta en tu proyecto
 
 export const useHeader = () => {
     // 1. ESTADOS LOCALES

@@ -3,13 +3,17 @@ import type { MouseEvent } from 'react'
 
 // Definimos la interfaz del producto aquí para reutilizarla
 export interface Product {
-    id: number
-    name: string
-    price: number
-    image: string
-    category?: string
-    rating?: number | string
-    isNew?: boolean
+    id: string | number;
+    name: string;
+    price: number;
+    image: string; // <-- TypeScript ahora sabe que esto SIEMPRE existirá
+    category?: string;
+    rating?: number;
+    isNew?: boolean;
+    // Agrega aquí las propiedades específicas de tus plantas si las necesitas
+    light?: string;
+    difficulty?: string;
+    type?: string;
 }
 
 export const useProductCard = (product: Product) => {

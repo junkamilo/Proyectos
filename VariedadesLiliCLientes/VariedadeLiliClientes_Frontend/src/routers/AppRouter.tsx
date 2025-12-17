@@ -18,6 +18,14 @@ export const router = createBrowserRouter([
                 element: <HomePage />
             },
             {
+                path: '/login',
+                element: <LoginPage /> // Placeholder
+            },
+            {
+                path: 'register',
+                element: <RegisterPage />
+            },
+            {
                 path: 'plantas', // <--- 2. La URL será domain.com/plantas
                 element: <PlantsPage />,
             },
@@ -35,12 +43,6 @@ export const router = createBrowserRouter([
             },
         ]
     },
-    {
-        path: '/register',
-        element: <RegisterPage />
-    },
-    {
-        path: '/login',
-        element: <LoginPage /> // Placeholder
-    }
+
+
 ]);
