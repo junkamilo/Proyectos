@@ -1,10 +1,8 @@
-
 import bcrypt from "bcryptjs"; //para encriptar contraseñas
 import jwt from "jsonwebtoken"; //para generar y verificar tokens
 import { Cliente } from "../models/Cliente.js";
 
 export class ServiceCliente {
-  
   // --- OBTENER TODOS LOS CLIENTES ---
   static async getAllClients() {
     try {
@@ -34,7 +32,7 @@ export class ServiceCliente {
         };
       }
 
-      // Los datos sensibles ya se filtraron en el modelo (findById), 
+      // Los datos sensibles ya se filtraron en el modelo (findById),
       // pero por seguridad extra verificamos que no viaje la contraseña.
       delete cliente.contrasena;
 
@@ -65,7 +63,10 @@ export class ServiceCliente {
       }
 
       // 2. Comparar contraseñas
-      const passwordValid = await bcrypt.compare(contrasena, cliente.contrasena);
+      const passwordValid = await bcrypt.compare(
+        contrasena,
+        cliente.contrasena
+      );
 
       if (!passwordValid) {
         return {
@@ -98,15 +99,16 @@ export class ServiceCliente {
 
       // Eliminamos datos sensibles antes de responder
       delete cliente.contrasena;
+      const { contrasena: _, ...clienteSinPass } = cliente;
 
       return {
         error: false,
         code: 200,
         message: "Inicio de sesión exitoso",
         data: {
-          accessToken,
-          refreshToken,
-          cliente,
+          ...clienteSinPass, 
+          token: accessToken,
+          refreshToken
         },
       };
     } catch (error) {
@@ -134,15 +136,28 @@ export class ServiceCliente {
       // NOTA: Pasamos la contraseña plana porque el modelo Cliente.create ya la encripta.
       const newCliente = await Cliente.create(data);
 
+      const token = jwt.sign(
+        { id: newCliente.id_cliente, email: newCliente.email },
+        process.env.JWT_SECRET || "palabra_secreta_super_segura", // Usa variables de entorno
+        { expiresIn: "7d" } // El token dura 7 días
+      );
+
       return {
         error: false,
         code: 201,
         message: "Cliente registrado exitosamente",
-        data: newCliente,
+        data: {
+          ...newCliente, // Los datos del usuario (id, nombre...)
+          token, // <--- Agregamos el token a la respuesta
+        },
       };
     } catch (error) {
       console.error("[ServiceCliente:register] Error:", error);
-      return { error: true, code: 500, message: "Error al registrar el cliente" };
+      return {
+        error: true,
+        code: 500,
+        message: "Error al registrar el cliente",
+      };
     }
   }
 
