@@ -1,11 +1,11 @@
 import express from "express";
-import { uploadUsuario } from "../middlewares/auth/uploadUsuario.js";
+import { uploadCliente, uploadUsuario } from "../middlewares/auth/uploadUsuario.js";
 import { ControllerCliente } from "../controllers/ControllerClientes.js";
 
 const router = express.Router();
 
 // Registrar un nuevo cliente (Soporta subida de imagen)
-router.post("/register", uploadUsuario.single("url_foto_perfil"), ControllerCliente.register);
+router.post("/register", uploadCliente.single("url_foto_perfil"), ControllerCliente.register);
 
 // Iniciar sesión
 router.post("/login", ControllerCliente.login);
@@ -20,7 +20,7 @@ router.get("/all", ControllerCliente.getAllClients);
 router.get("/:id", ControllerCliente.getClient);
 
 // Actualizar información del cliente (Soporta actualizar imagen)
-router.put("/:id", uploadUsuario.single("url_foto_perfil"), ControllerCliente.updateClient);
+router.put("/:id", uploadCliente.single("url_foto_perfil"), ControllerCliente.updateClient);
 
 // Eliminar cliente
 router.delete("/:id", ControllerCliente.deleteClient);
