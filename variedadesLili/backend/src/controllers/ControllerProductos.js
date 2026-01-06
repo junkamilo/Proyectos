@@ -29,13 +29,32 @@ export class ControllerProductos {
     }
   };
   static GetAllProductos = async (req, res) => {
-    try {
-      const response = await ServiceProductos.GetAllProductosService();
+     try {
+      // 1. Verificamos si la URL trae un parámetro de categoría
+      // Ejemplo: /productos?categoria=plantas
+      const { categoria } = req.query;
 
+      let response;
+
+      // 2. Lógica de Decisión (Routing interno)
+      if (categoria) {
+        // Opción A: Si hay categoría, usamos el nuevo servicio
+        console.log(`[Controller] Filtrando por: ${categoria}`);
+        response = await ServiceProductos.GetProductosPorCategoriaService(
+          categoria
+        );
+      } else {
+        // Opción B: Si no hay categoría, traemos todo (comportamiento original)
+        console.log("[Controller] Obteniendo todo el catálogo");
+        response = await ServiceProductos.GetAllProductosService();
+      }
+
+      // 3. Manejo de Errores del Servicio (Lógica unificada)
       if (response.error) {
         return ResponseProvider.error(res, response.message, response.code);
       }
 
+      // 4. Respuesta Exitosa
       return ResponseProvider.success(
         res,
         response.data,
@@ -76,25 +95,20 @@ export class ControllerProductos {
       console.error("[ControllerProductos:UpdateProducto] Error:", error);
       return ResponseProvider.error(res, "Error interno del servidor", 500);
     }
-  };
-  static async DeleteProducto(req, res) {
-  try {
-    const { id } = req.params;
-
-    const response = await ServiceProductos.DeleteProductoService(id);
-    if (response.error) {
-      return ResponseProvider.error(res, response.message, 400);
-    }
-
-    return ResponseProvider.success(res, response.message);
-  } catch (error) {
-    console.error("[DeleteProducto]", error);
-    return ResponseProvider.error(
-      res,
-      "Error interno del servidor",
-      500
-    );
   }
-}
+  static async DeleteProducto(req, res) {
+    try {
+      const { id } = req.params;
 
+      const response = await ServiceProductos.DeleteProductoService(id);
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, 400);
+      }
+
+      return ResponseProvider.success(res, response.message);
+    } catch (error) {
+      console.error("[DeleteProducto]", error);
+      return ResponseProvider.error(res, "Error interno del servidor", 500);
+    }
+  }
 }

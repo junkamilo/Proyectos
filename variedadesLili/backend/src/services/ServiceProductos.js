@@ -68,6 +68,33 @@ export class ServiceProductos {
       };
     }
   }
+  static async GetProductosPorCategoriaService(categoria) {
+    try {
+      // 1. Llamamos al método del modelo que creamos hace un momento
+      const productos = await Productos.GetProductosPorCategoria(categoria);
+
+      // 2. Retornamos respuesta exitosa
+      return {
+        error: false,
+        code: 200,
+        message: `Productos de la categoría '${categoria}' obtenidos correctamente`,
+        data: productos,
+      };
+    } catch (error) {
+      // 3. Manejo de errores consistente
+      console.error(
+        "[ServiceProductos:GetProductosPorCategoriaService] Error:",
+        error
+      );
+
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al filtrar los productos",
+        details: process.env.NODE_ENV === "development" ? error.message : null,
+      };
+    }
+  }
   static async UpdateProductoService(data) {
     try {
       if (!data.id_producto) {

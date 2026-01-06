@@ -65,6 +65,32 @@ export class Productos {
 
     return rows;
   }
+
+  static async GetProductosPorCategoria(categoria) {
+    const [rows] = await db.query(
+      `
+    SELECT 
+      id_producto,
+      nombre_producto,
+      url_foto_producto,
+      cantidad,
+      descripcion,
+      precio,
+      tamano,
+      categoria,
+      material,
+      estado,
+      fecha_creacion,
+      fecha_actualizacion
+    FROM Productos
+    WHERE categoria = ? 
+    ORDER BY fecha_creacion DESC;
+  `,
+      [categoria]
+    ); // Pasamos la categoría como parámetro seguro
+
+    return rows;
+  }
   //actualizamos o editamos los productos
   static async UpdateProductos(
     id_producto,

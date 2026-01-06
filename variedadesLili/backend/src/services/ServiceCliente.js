@@ -1,8 +1,9 @@
-import bcrypt from "bcryptjs"; //para encriptar contraseñas
-import jwt from "jsonwebtoken"; //para generar y verificar tokens
+import bcrypt from "bcryptjs"; 
+import jwt from "jsonwebtoken"; 
 import { Cliente } from "../models/Cliente.js";
 
 export class ServiceCliente {
+  
   // --- OBTENER TODOS LOS CLIENTES ---
   static async getAllClients() {
     try {
@@ -32,8 +33,6 @@ export class ServiceCliente {
         };
       }
 
-      // Los datos sensibles ya se filtraron en el modelo (findById),
-      // pero por seguridad extra verificamos que no viaje la contraseña.
       delete cliente.contrasena;
 
       return {
@@ -51,29 +50,18 @@ export class ServiceCliente {
   // --- LOGIN DE CLIENTE ---
   static async login(email, contrasena) {
     try {
-      // 1. Buscar usuario por email
+      // 1. Buscar usuario
       const cliente = await Cliente.findByEmail(email);
 
       if (!cliente) {
-        return {
-          error: true,
-          code: 401,
-          message: "Credenciales incorrectas",
-        };
+        return { error: true, code: 401, message: "Credenciales incorrectas" };
       }
 
       // 2. Comparar contraseñas
-      const passwordValid = await bcrypt.compare(
-        contrasena,
-        cliente.contrasena
-      );
+      const passwordValid = await bcrypt.compare(contrasena, cliente.contrasena);
 
       if (!passwordValid) {
-        return {
-          error: true,
-          code: 401,
-          message: "Credenciales incorrectas",
-        };
+        return { error: true, code: 401, message: "Credenciales incorrectas" };
       }
 
       // 3. Generar Access Token
@@ -81,23 +69,20 @@ export class ServiceCliente {
         {
           id: cliente.id_cliente,
           email: cliente.email,
-          rol: "cliente", // Asignamos rol fijo o lo sacamos de la BD si existiera
+          rol: "cliente",
         },
-        process.env.ACCESS_TOKEN_SECRET || "access_secret", // Fallback por seguridad
+        process.env.ACCESS_TOKEN_SECRET || "access_secret_seguro", // LLAVE A
         { expiresIn: "1h" }
       );
 
       // 4. Generar Refresh Token
       const refreshToken = jwt.sign(
         { id: cliente.id_cliente },
-        process.env.REFRESH_TOKEN_SECRET || "refresh_secret",
+        process.env.REFRESH_TOKEN_SECRET || "refresh_secret_seguro",
         { expiresIn: "7d" }
       );
 
-      // NOTA: Tu tabla 'Clientes' no tiene columna refreshToken, por eso no lo guardamos en BD.
-      // Si la agregas después: await Cliente.updateRefreshToken(cliente.id_cliente, refreshToken);
-
-      // Eliminamos datos sensibles antes de responder
+      // Limpiar respuesta
       delete cliente.contrasena;
       const { contrasena: _, ...clienteSinPass } = cliente;
 
@@ -106,9 +91,9 @@ export class ServiceCliente {
         code: 200,
         message: "Inicio de sesión exitoso",
         data: {
-          ...clienteSinPass, 
+          ...clienteSinPass,
           token: accessToken,
-          refreshToken
+          refreshToken,
         },
       };
     } catch (error) {
@@ -122,7 +107,7 @@ export class ServiceCliente {
     try {
       const { email } = data;
 
-      // 1. Validar si el email ya existe
+      // 1. Validar email
       const existingUser = await Cliente.findByEmail(email);
       if (existingUser) {
         return {
@@ -132,14 +117,16 @@ export class ServiceCliente {
         };
       }
 
-      // 2. Crear cliente
-      // NOTA: Pasamos la contraseña plana porque el modelo Cliente.create ya la encripta.
+      // 2. Crear cliente (Asumimos que el modelo encripta, si no, hazlo aquí)
+      // data.contrasena = await bcrypt.hash(data.contrasena, 10); // Descomenta si el modelo no encripta
       const newCliente = await Cliente.create(data);
 
+      // 3. Generar Token (Auto-Login)
+      // CORREGIDO: Usamos ACCESS_TOKEN_SECRET para que coincida con el login
       const token = jwt.sign(
-        { id: newCliente.id_cliente, email: newCliente.email },
-        process.env.JWT_SECRET || "palabra_secreta_super_segura", // Usa variables de entorno
-        { expiresIn: "7d" } // El token dura 7 días
+        { id: newCliente.id_cliente, email: newCliente.email, rol: "cliente" },
+        process.env.ACCESS_TOKEN_SECRET || "access_secret_seguro", // LLAVE A (Igual que login)
+        { expiresIn: "1h" } // Coherencia: 1 hora igual que login
       );
 
       return {
@@ -147,17 +134,13 @@ export class ServiceCliente {
         code: 201,
         message: "Cliente registrado exitosamente",
         data: {
-          ...newCliente, // Los datos del usuario (id, nombre...)
-          token, // <--- Agregamos el token a la respuesta
+          ...newCliente,
+          token, 
         },
       };
     } catch (error) {
       console.error("[ServiceCliente:register] Error:", error);
-      return {
-        error: true,
-        code: 500,
-        message: "Error al registrar el cliente",
-      };
+      return { error: true, code: 500, message: "Error al registrar el cliente" };
     }
   }
 
@@ -191,13 +174,22 @@ export class ServiceCliente {
         return { error: true, code: 404, message: "Cliente no encontrado" };
       }
 
+      // MEJORA DE SEGURIDAD:
+      // Si el usuario está actualizando su contraseña, debemos encriptarla de nuevo
+      if (data.contrasena) {
+        data.contrasena = await bcrypt.hash(data.contrasena, 10);
+      }
+
       const result = await Cliente.updateById(id, data);
+
+      // Eliminamos la contraseña de la respuesta por seguridad
+      const { contrasena, ...datosActualizados } = data;
 
       return {
         error: false,
         code: 200,
         message: "Datos del cliente actualizados",
-        data: { id_cliente: id, ...data },
+        data: { id_cliente: id, ...datosActualizados },
       };
     } catch (error) {
       console.error("[ServiceCliente:updateClient] Error:", error);
