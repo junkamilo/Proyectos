@@ -7,7 +7,7 @@ const app = document.getElementById("app");
 const body = document.querySelector("body");
 const headerMain = header();
 const footer = Footer();
-body.append(headerMain,app,footer);
+body.append(headerMain, app, footer);
 
 // Ejecuta router al cargar
 router(app);
