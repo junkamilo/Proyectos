@@ -7,6 +7,8 @@ import AlcanciaPages from "@/alcancia/pages/AlcanciaPage";
 import AbonoPages from "@/abono/pages/AbonoPage";
 import { RegisterPage } from "@/auth/pages/RegisterPage";
 import { LoginPage } from "@/auth/pages/LoginPage";
+import ProfilePage from "@/profile/components/ProfileUser";
+
 
 export const router = createBrowserRouter([
     {
@@ -24,6 +26,10 @@ export const router = createBrowserRouter([
             {
                 path: 'register',
                 element: <RegisterPage />
+            },
+            {
+                path: 'user',
+                element: <ProfilePage />
             },
             {
                 path: 'plantas', // <--- 2. La URL será domain.com/plantas

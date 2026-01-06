@@ -1,12 +1,31 @@
-import { Search, Filter, ChevronDown, Grid3x3, List } from "lucide-react"
-import { useState } from "react"
+import { Search, Filter, Grid3x3, List } from "lucide-react"
 
-export const BarraControl = () => {
+// 1. Definimos qué necesita este componente para funcionar
+interface BarraControlProps {
+    searchTerm: string;
+    setSearchTerm: (value: string) => void;
+    sortBy: string;
+    setSortBy: (value: string) => void;
+    showFilters: boolean;
+    setShowFilters: (value: boolean) => void;
+    // El viewMode es visual, pero debe compartirse con la lista, así que también lo recibimos
+    viewMode: "grid" | "list";
+    setViewMode: (mode: "grid" | "list") => void;
+    placeholder?: string;
+}
 
-    const [showFilters, setShowFilters] = useState(true);
-    const [sortBy, setSortBy] = useState("popular");
-    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-    const [searchTerm, setSearchTerm] = useState("");
+// 2. Recibimos las props (ya no usamos useState aquí para los datos)
+export const BarraControl = ({
+    searchTerm,
+    setSearchTerm,
+    sortBy,
+    setSortBy,
+    showFilters,
+    setShowFilters,
+    viewMode,
+    setViewMode,
+    placeholder = "Buscar producto..."
+}: BarraControlProps) => {
 
     return (
         <div className="flex flex-col lg:flex-row gap-4 mb-8 sticky top-20 z-30 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md py-4 -mx-4 px-4 lg:mx-0 lg:px-0 lg:static lg:bg-transparent">
@@ -15,7 +34,8 @@ export const BarraControl = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                     type="text"
-                    placeholder="Buscar planta (ej: Monstera, Ficus)..."
+                    placeholder={placeholder}
+                    // 3. Usamos los valores que vienen del padre
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-emerald-100 dark:border-emerald-900/50 rounded-xl bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all shadow-sm"
@@ -33,21 +53,8 @@ export const BarraControl = () => {
                     <Filter className="w-4 h-4" />
                     {showFilters ? 'Ocultar Filtros' : 'Filtros'}
                 </button>
-
-                <div className="relative min-w-[180px]">
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-800 rounded-xl text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-emerald-500 cursor-pointer"
-                    >
-                        <option value="popular">🔥 Más Populares</option>
-                        <option value="newest">🌱 Recién Llegadas</option>
-                        <option value="price-low">💰 Precio: Bajo a Alto</option>
-                        <option value="price-high">💎 Precio: Alto a Bajo</option>
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                </div>
-
+                
+                {/**botones de grid y lista */}
                 <div className="flex bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-800 p-1">
                     <button onClick={() => setViewMode("grid")} className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600" : "text-slate-400 hover:text-slate-600"}`}>
                         <Grid3x3 className="w-5 h-5" />

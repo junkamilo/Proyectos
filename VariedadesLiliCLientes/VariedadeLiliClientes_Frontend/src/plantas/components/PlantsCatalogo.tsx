@@ -1,96 +1,23 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Trees } from 'lucide-react';
+import { Leaf, Trees } from 'lucide-react';
 
-// ACTIONS & COMPONENTS
-import { getProductosPlantas } from '../actions/get-plantas';
-import { HeaderPlantas } from './HeaderPlantas';
-import { BarraControl } from './BarraControl';
-import { SidebarFilters } from './SidebarFilters';
-import { ProductosLista } from './ProductosLista';
+// COMPONENTS
+import { HeaderProducts } from '../../components/common/HeaderProducts/HeaderProduct';
+import { BarraControl } from '../../components/common/BarraControl';
+import { SidebarFilters } from '../../components/common/SidebarFilters';
+import { ProductosLista } from '../../components/common/ProductosLista';
+import { useState } from 'react';
+import { useCatalog } from '@/hooks/useCatalog';
 
-// --- 1. DEFINICIÓN DE TIPO (Contrato de Datos) ---
-// Idealmente esto va en un archivo types.ts
-export interface Product {
-    id: number;
-    name: string;
-    price: number;
-    image: string; // Garantizamos que siempre hay imagen
-    rating: number; // Garantizamos que es número
-    description: string;
-    category: string;
-    difficulty: string;
-    light: string;
-    type: string;
-    isNew: boolean;
-    inStock: number;
-}
+// HOOK (Lógica importada)
+
 
 export default function PlantasCatalog() {
-    // ESTADOS DE FILTROS
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortBy, setSortBy] = useState("popular");
-    const [filterDifficulty, setFilterDifficulty] = useState<string>("todo");
-    const [filterLight, setFilterLight] = useState<string>("todo");
-    const [priceRange, setPriceRange] = useState([0, 200000]);
+    // LLAMAMOS AL HOOK
+    const { products, isLoading, filters, actions, isError } = useCatalog("plantas");
+    // 2. Estado local para la vista (Grid/List) ya que es puramente visual
+    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-    // --- 2. FETCH & NORMALIZACIÓN (La Solución Pro) ---
-    const { data: plants = [], isLoading, isError } = useQuery({
-        queryKey: ['productos-plantas'],
-        queryFn: getProductosPlantas,
-        staleTime: 1000 * 60 * 10, // 10 minutos
-
-        // AQUÍ OCURRE LA MAGIA: Transformamos los datos antes de usarlos
-        select: (data: any[]): Product[] => {
-            return data.map(plant => ({
-                ...plant,
-                // Arreglamos el problema del Rating (String -> Number)
-                rating: Number(plant.rating) || 0,
-                // Arreglamos el problema del Precio (asegurar Number)
-                price: Number(plant.price) || 0,
-                // Arreglamos el problema de imagen faltante
-                image: plant.image || "/img/placeholder-plant.png"
-            }));
-        }
-    });
-
-    // --- 3. LÓGICA DE FILTRADO (Ahora más limpia) ---
-    const filteredAndSortedPlants = useMemo(() => {
-        if (isLoading) return [];
-
-        let result = plants.filter((plant) => {
-            // Normalizamos a minúsculas para búsqueda insensible a mayúsculas
-            const term = searchTerm.toLowerCase();
-            const matchesSearch = plant.name.toLowerCase().includes(term) ||
-                plant.type.toLowerCase().includes(term);
-
-            const matchesDifficulty = filterDifficulty === "todo" || plant.difficulty === filterDifficulty;
-            const matchesLight = filterLight === "todo" || plant.light === filterLight;
-            const matchesPrice = plant.price >= priceRange[0] && plant.price <= priceRange[1];
-
-            return matchesSearch && matchesDifficulty && matchesLight && matchesPrice;
-        });
-
-        // Lógica de ordenamiento (Ya no necesitamos parseFloat porque 'rating' es number)
-        switch (sortBy) {
-            case "price-low":
-                result.sort((a, b) => a.price - b.price);
-                break;
-            case "price-high":
-                result.sort((a, b) => b.price - a.price);
-                break;
-            case "rating":
-                result.sort((a, b) => b.rating - a.rating);
-                break;
-            case "newest":
-                result.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-                break;
-            default: break;
-        }
-        return result;
-    }, [plants, searchTerm, filterDifficulty, filterLight, priceRange, sortBy, isLoading]);
-
-    // --- 4. RENDERIZADO DE ESTADOS DE CARGA ---
+    // 1. MANEJO DE CARGA Y ERROR
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -110,24 +37,62 @@ export default function PlantasCatalog() {
         );
     }
 
-    // --- 5. RENDERIZADO PRINCIPAL ---
+    // 2. RENDERIZADO (Ahora pasamos los props correctamente)
     return (
         <section className="min-h-screen bg-slate-50 dark:bg-green-950/20 transition-colors duration-500">
 
-            <HeaderPlantas />
+            <HeaderProducts
+                variant="plantas"
+                subtitle='Vivero Natural'
+                title='Plantas de Interior'
+                description='Purifica tu aire y relaja tu mente...'
+                cantProducto='3'
+                PorcentageprocessProduction='100%'
+                processProduction='Orgánico'
+                icon={<Leaf className="w-6 h-6" />}
+            />
 
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
 
-                {/* IMPORTANTE: Debes pasar los props de control a tus componentes */}
-                <BarraControl />
+                {/* Pasamos estados y acciones a la barra de control */}
+                <BarraControl
+                    searchTerm={filters.searchTerm}
+                    setSearchTerm={actions.setSearchTerm}
+                    sortBy={filters.sortBy}
+                    setSortBy={actions.setSortBy}
+                    showFilters={filters.showFilters}
+                    setShowFilters={actions.setShowFilters}
+                    viewMode={viewMode}
+                    setViewMode={setViewMode}
+                />
 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start mt-8">
+                <div className="flex flex-col lg:grid lg:grid-cols-4 gap-8 items-start">
 
-                    {/* IMPORTANTE: Sidebar necesita las funciones para actualizar el estado */}
-                    <SidebarFilters />
+                    {/* FILTROS (Columna 1) */}
+                    {/* Controlamos su visibilidad aquí */}
+                    <div className={`lg:col-span-1 ${filters.showFilters ? 'block' : 'hidden lg:block'}`}>
+                        <SidebarFilters
+                            showFilters={filters.showFilters}
+                            filterTamano={filters.filterTamano}
+                            setFilterTamano={actions.setFilterTamano}
+                            filterMaterial={filters.filterMaterial}
+                            setFilterMaterial={actions.setFilterMaterial}
+                            priceRange={filters.priceRange}
+                            setPriceRange={actions.setPriceRange}
+                            onReset={actions.resetFilters}
+                        />
+                    </div>
 
-                    {/* Lista de Productos Corregida */}
-                    <ProductosLista filteredAndSortedPlants={filteredAndSortedPlants} />
+                    {/* LISTA (Columna 2, 3 y 4) */}
+                    {/* Si hay filtros, ocupa 3 columnas. Si no, ocupa las 4 completas */}
+                    <div className={`w-full ${filters.showFilters ? "lg:col-span-3" : "lg:col-span-4"}`}>
+                        <ProductosLista
+                            filteredAndSortedPlants={products}
+                            viewMode={viewMode}
+                            onResetFilters={actions.resetFilters}
+                        />
+                    </div>
+
                 </div>
             </div>
         </section>

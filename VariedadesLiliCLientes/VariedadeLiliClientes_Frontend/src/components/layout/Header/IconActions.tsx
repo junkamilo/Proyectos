@@ -36,21 +36,26 @@ export const IconActions = ({ onToggleMenu, isMenuOpen, isAuthenticated, logout 
                     </span>
                 </Link>
             )}
-
+            
 
             {/* --- ZONA DE USUARIO (DESKTOP) --- */}
             {isAuthenticated ? (
                 // OPCIÓN A: USUARIO LOGUEADO
                 <div className="hidden md:flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-700">
                     <div className="bg-emerald-100 dark:bg-emerald-900/30 rounded-full p-2" title="Sesión Iniciada">
-                        <UserCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+                        <Link
+                            to={'user'}
+                        > <UserCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+
+                        </Link>
                     </div>
+                    {/*Boton de cerrar sesion*/}
                     <button
                         onClick={logout}
-                        title="Cerrar Sesión"
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-full transition-all duration-300 transform hover:scale-105"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 dark:hover:border-rose-900/50 dark:hover:bg-rose-900/20 transition-all duration-300 shadow-sm hover:shadow-md"
                     >
-                        <LogOut className="w-5 h-5" />
+                        <span className="text-sm font-bold">Salir</span>
+                        <LogOut className="w-4 h-4" />
                     </button>
                 </div>
             ) : (
