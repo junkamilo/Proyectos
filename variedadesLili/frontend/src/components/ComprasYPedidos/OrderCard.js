@@ -93,7 +93,7 @@ export const OrderCard = (pedido) => {
   // --- 5. LÓGICA DEL BOTÓN (INTEGRADA) ---
   const actionsContainer = card.querySelector(".js-actions");
 
-  if (pedido.estado === "pagado" || pedido.estado === "activo") {
+  if (pedido.estado === "pagado" || pedido.estado === "activo" || pedido.estado === "reclamado") {
     // Pasamos una función ASYNC al callback del botón
     const btnEnviar = SendButton(async (e) => {
       const btn = e.currentTarget; // Referencia al botón para cambiar texto

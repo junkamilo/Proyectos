@@ -7,6 +7,7 @@ export const TabsFilter = (currentFilter, onFilterChange) => {
     { id: "all", label: "Todos" },
     { id: "pagado", label: "Pagados" },
     { id: "enviado", label: "Enviados" },
+    { id: "reclamado", label: "Reclamado" },
     { id: "entregado", label: "Entregados" },
     { id: "cancelado", label: "Cancelados" },
   ];
