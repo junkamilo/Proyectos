@@ -114,31 +114,21 @@ export class ServicePedidos {
   static async GetHistorialService(id_cliente) {
     try {
       if (!id_cliente) {
-        return {
-          error: true,
-          code: 400,
-          message:
-            "El 'id_cliente' es obligatorio para consultar el historial.",
-        };
+        return { error: true, code: 400, message: "Falta id_cliente" };
       }
 
-      const pedidos = await Pedidos.GetPedidosPorCliente(id_cliente);
+      // Llamamos al modelo que ya hace el JOIN y el MAP
+      const listaPedidos = await Pedidos.GetPedidosPorCliente(id_cliente);
 
       return {
         error: false,
         code: 200,
         message: "Historial de pedidos obtenido correctamente",
-        data: pedidos,
+        data: listaPedidos, // <--- Aquí va el array limpio con productos dentro
       };
     } catch (error) {
-      console.error("[ServicePedidos:GetHistorialService] Error:", error);
-
-      return {
-        error: true,
-        code: 500,
-        message: "Error interno al obtener el historial",
-        details: process.env.NODE_ENV === "development" ? error.message : null,
-      };
+      console.error("[ServicePedidos] Error:", error);
+      return { error: true, code: 500, message: "Error interno" };
     }
   }
   // Servicio para obtener detalles
@@ -235,7 +225,7 @@ export class ServicePedidos {
   static async MarcarComoEnviadoService(id_pedido) {
     try {
       // 1. Ejecutamos la actualización
-      const result = await Pedidos.UpdateEstadoPedido(id_pedido, 'enviado');
+      const result = await Pedidos.UpdateEstadoPedido(id_pedido, "enviado");
 
       // 2. Validamos si se actualizó alguna fila
       if (result.affectedRows === 0) {
@@ -250,15 +240,75 @@ export class ServicePedidos {
         error: false,
         code: 200,
         message: "Pedido marcado como ENVIADO correctamente.",
-        data: { id_pedido, nuevo_estado: 'enviado' }
+        data: { id_pedido, nuevo_estado: "enviado" },
       };
-
     } catch (error) {
       console.error("[ServicePedidos:MarcarEnviado] Error:", error);
       return {
         error: true,
         code: 500,
         message: "Error interno al actualizar el estado",
+      };
+    }
+  }
+
+  static async MarcarComoEntregadoService(id_pedido, comentario) {
+    try {
+      // 1. Ejecutamos la actualización en BD
+      const result = await Pedidos.MarcarEntregado(id_pedido, comentario);
+
+      // 2. Validamos si se actualizó alguna fila
+      if (result.affectedRows === 0) {
+        return {
+          error: true,
+          code: 404,
+          message: "El pedido no existe o no se pudo actualizar.",
+        };
+      }
+
+      return {
+        error: false,
+        code: 200,
+        message: "¡Pedido entregado con éxito! Gracias por tu compra.",
+        data: { id_pedido, nuevo_estado: "entregado", comentario },
+      };
+    } catch (error) {
+      console.error("[ServicePedidos:MarcarEntregado] Error:", error);
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al confirmar la entrega",
+      };
+    }
+  }
+
+  static async SolicitarDevolucionService(id_pedido, productos, motivo) {
+    try {
+      // 1. Validaciones básicas
+      if (!id_pedido || !productos || productos.length === 0 || !motivo) {
+        return {
+          error: true,
+          code: 400,
+          message: "Faltan datos requeridos (pedido, productos o motivo).",
+        };
+      }
+
+      // 2. Llamada al Modelo
+      await Pedidos.RegistrarDevolucion(id_pedido, productos, motivo);
+
+      // 3. Respuesta Exitosa
+      return {
+        error: false,
+        code: 200,
+        message: "Solicitud de devolución registrada correctamente.",
+        data: { id_pedido, total_productos_devueltos: productos.length },
+      };
+    } catch (error) {
+      console.error("[ServicePedidos:SolicitarDevolucion] Error:", error);
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al procesar la devolución.",
       };
     }
   }

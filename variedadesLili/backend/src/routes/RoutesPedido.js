@@ -1,13 +1,15 @@
 import express from "express";
 import { ControllerPedidos } from "../controllers/ControllerPedido.js";
 
-
-
 const router = express.Router();
 
 router.get("/dashboard_todos", ControllerPedidos.GetAllPedidos);
 
 router.patch("/enviar/:id", ControllerPedidos.MarcarEnviado);
+
+router.patch("/recibir/:id", ControllerPedidos.MarcarEntregado);
+
+router.post("/devolucion/:id", ControllerPedidos.SolicitarDevolucion);
 
 // Endpoint para finalizar compra: POST /api/pedidos/comprar
 router.post("/comprar", ControllerPedidos.CrearPedido);

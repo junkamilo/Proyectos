@@ -148,4 +148,59 @@ export class ControllerPedidos {
       return ResponseProvider.error(res, "Error interno", 500);
     }
   };
+
+  static MarcarEntregado = async (req, res) => {
+    try {
+      const { id } = req.params; // ID del pedido
+      const { comentario } = req.body; // Comentario enviado desde el modal
+
+      const response = await ServicePedidos.MarcarComoEntregadoService(
+        id,
+        comentario
+      );
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      console.error(error);
+      return ResponseProvider.error(res, "Error interno", 500);
+    }
+  };
+
+  static SolicitarDevolucion = async (req, res) => {
+    try {
+      const { id } = req.params; // ID del pedido desde la URL
+      const { productos, motivo } = req.body; // Datos desde el Frontend
+
+      console.log(`[Controller] Procesando devolución pedido #${id}`);
+
+      const response = await ServicePedidos.SolicitarDevolucionService(
+        id,
+        productos,
+        motivo
+      );
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      console.error(error);
+      return ResponseProvider.error(res, "Error interno del servidor", 500);
+    }
+  };
 }

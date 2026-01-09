@@ -120,11 +120,72 @@ export class Pedidos {
 
   // Obtener pedidos de un cliente (Historial)
   static async GetPedidosPorCliente(id_cliente) {
-    const [rows] = await db.query(
-      `SELECT * FROM Pedidos WHERE id_cliente = ? ORDER BY fecha_pedido DESC`,
-      [id_cliente]
-    );
-    return rows;
+    try {
+      // 1. CONSULTA CON JOIN: Traemos pedido + detalles + info del producto
+      const sql = `
+            SELECT 
+                p.id_pedido, 
+                p.fecha_pedido, 
+                p.estado, 
+                p.total, 
+                p.direccion_envio,
+                
+                -- Datos del Detalle y Producto
+                dp.cantidad,
+                dp.precio_unitario,
+                prod.nombre_producto,
+                prod.url_foto_producto
+            
+            FROM Pedidos p
+            -- Unimos con detalles
+            LEFT JOIN Detalle_Pedidos dp ON p.id_pedido = dp.id_pedido
+            -- Unimos con productos
+            LEFT JOIN Productos prod ON dp.id_producto = prod.id_producto
+            
+            WHERE p.id_cliente = ?
+            ORDER BY p.fecha_pedido DESC
+        `;
+
+      const [rows] = await db.query(sql, [id_cliente]);
+
+      // 2. AGRUPAR LOS RESULTADOS (Porque el JOIN repite filas por cada producto)
+      const pedidosMap = new Map();
+
+      rows.forEach((row) => {
+        // Si el pedido no existe en el mapa, lo inicializamos
+        if (!pedidosMap.has(row.id_pedido)) {
+          pedidosMap.set(row.id_pedido, {
+            id_pedido: row.id_pedido,
+            fecha_pedido: row.fecha_pedido,
+            estado: row.estado,
+            total: row.total,
+            direccion_envio: row.direccion_envio,
+            productos: [], // <--- AQUÍ ESTÁ LA CLAVE: Inicializamos el array
+          });
+        }
+
+        // Si hay datos de producto en esta fila, lo agregamos al array 'productos'
+        if (row.nombre_producto) {
+          pedidosMap.get(row.id_pedido).productos.push({
+            nombre_producto: row.nombre_producto,
+            url_foto_producto: row.url_foto_producto,
+            cantidad: row.cantidad,
+            precio_unitario: row.precio_unitario,
+          });
+        }
+      });
+
+      // 3. Convertir el mapa a un array limpio para enviar al frontend
+      const historialFinal = Array.from(pedidosMap.values());
+
+      return {
+        error: false,
+        data: historialFinal,
+      };
+    } catch (error) {
+      console.error("Error en GetHistorial:", error);
+      return { error: true, message: "Error en base de datos" };
+    }
   }
 
   // Obtener los productos de un pedido específico
@@ -187,5 +248,47 @@ export class Pedidos {
       [nuevo_estado, id_pedido]
     );
     return result;
+  }
+
+  // Actualizar a entregado y guardar comentario
+  static async MarcarEntregado(id_pedido, feedback) {
+    const [result] = await db.query(
+      `UPDATE Pedidos SET estado = 'entregado', feedback = ? WHERE id_pedido = ?`,
+      [feedback, id_pedido]
+    );
+    return result;
+  }
+
+  static async RegistrarDevolucion(id_pedido, productos, motivo_general) {
+    const connection = await db.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      // 1. Insertar cada producto devuelto en la tabla 'Devoluciones'
+      // Asegúrate de haber creado la tabla 'Devoluciones' primero en tu BD
+      for (const item of productos) {
+        await connection.query(
+          `INSERT INTO Devoluciones (id_pedido, id_producto, cantidad, motivo) 
+           VALUES (?, ?, ?, ?)`,
+          [id_pedido, item.id_producto, item.cantidad, motivo_general]
+        );
+      }
+
+      // 2. Actualizar el estado del pedido principal
+      // Usamos un estado 'reclamado' o actualizamos el feedback para marcar que hay una incidencia
+      await connection.query(
+        `UPDATE Pedidos SET estado = 'reclamado', feedback = ? WHERE id_pedido = ?`,
+        [`Devolución solicitada: ${motivo_general}`, id_pedido]
+      );
+
+      await connection.commit();
+      return { success: true, affectedRows: productos.length };
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 }
