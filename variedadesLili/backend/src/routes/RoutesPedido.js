@@ -11,6 +11,8 @@ router.patch("/recibir/:id", ControllerPedidos.MarcarEntregado);
 
 router.post("/devolucion/:id", ControllerPedidos.SolicitarDevolucion);
 
+router.patch("/cancelar/:id", ControllerPedidos.CancelarPedido);
+
 // Endpoint para finalizar compra: POST /api/pedidos/comprar
 router.post("/comprar", ControllerPedidos.CrearPedido);
 

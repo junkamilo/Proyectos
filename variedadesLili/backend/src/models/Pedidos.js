@@ -129,17 +129,14 @@ export class Pedidos {
                 p.estado, 
                 p.total, 
                 p.direccion_envio,
-                
-                -- Datos del Detalle y Producto
+                dp.id_producto,
                 dp.cantidad,
                 dp.precio_unitario,
                 prod.nombre_producto,
                 prod.url_foto_producto
             
             FROM Pedidos p
-            -- Unimos con detalles
             LEFT JOIN Detalle_Pedidos dp ON p.id_pedido = dp.id_pedido
-            -- Unimos con productos
             LEFT JOIN Productos prod ON dp.id_producto = prod.id_producto
             
             WHERE p.id_cliente = ?
@@ -167,6 +164,7 @@ export class Pedidos {
         // Si hay datos de producto en esta fila, lo agregamos al array 'productos'
         if (row.nombre_producto) {
           pedidosMap.get(row.id_pedido).productos.push({
+            id_producto: row.id_producto,
             nombre_producto: row.nombre_producto,
             url_foto_producto: row.url_foto_producto,
             cantidad: row.cantidad,
@@ -284,6 +282,61 @@ export class Pedidos {
 
       await connection.commit();
       return { success: true, affectedRows: productos.length };
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async CancelarPedido(id_pedido) {
+    const connection = await db.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      // 1. Verificar el estado actual
+      const [pedido] = await connection.query(
+        "SELECT estado FROM Pedidos WHERE id_pedido = ?",
+        [id_pedido]
+      );
+
+      if (pedido.length === 0) {
+        throw new Error("El pedido no existe.");
+      }
+
+      const estadoActual = pedido[0].estado;
+
+      // Validamos que NO esté enviado ni entregado
+      if (["enviado", "entregado", "recibido"].includes(estadoActual)) {
+        throw new Error(
+          "No se puede cancelar un pedido que ya fue enviado o entregado."
+        );
+      }
+
+      // 2. Obtener los productos del pedido para devolver el stock
+      const [detalles] = await connection.query(
+        "SELECT id_producto, cantidad FROM Detalle_Pedidos WHERE id_pedido = ?",
+        [id_pedido]
+      );
+
+      // 3. Devolver stock a la tabla Productos
+      for (const item of detalles) {
+        await connection.query(
+          "UPDATE Productos SET cantidad = cantidad + ? WHERE id_producto = ?",
+          [item.cantidad, item.id_producto]
+        );
+      }
+
+      // 4. Actualizar el estado del pedido a 'cancelado'
+      await connection.query(
+        "UPDATE Pedidos SET estado = 'cancelado' WHERE id_pedido = ?",
+        [id_pedido]
+      );
+
+      await connection.commit();
+      return { success: true };
     } catch (error) {
       await connection.rollback();
       throw error;

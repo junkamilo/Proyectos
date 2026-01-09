@@ -203,4 +203,28 @@ export class ControllerPedidos {
       return ResponseProvider.error(res, "Error interno del servidor", 500);
     }
   };
+
+  static CancelarPedido = async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      console.log(`[Controller] Cancelando pedido #${id}`);
+
+      const response = await ServicePedidos.CancelarPedidoService(id);
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      console.error(error);
+      return ResponseProvider.error(res, "Error interno del servidor", 500);
+    }
+  };
 }

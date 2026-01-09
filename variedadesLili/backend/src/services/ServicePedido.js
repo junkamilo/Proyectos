@@ -312,4 +312,34 @@ export class ServicePedidos {
       };
     }
   }
+
+  static async CancelarPedidoService(id_pedido) {
+    try {
+      if (!id_pedido) {
+        return { error: true, code: 400, message: "ID de pedido requerido." };
+      }
+
+      await Pedidos.CancelarPedido(id_pedido);
+
+      return {
+        error: false,
+        code: 200,
+        message: "Pedido cancelado correctamente y stock restaurado.",
+        data: { id_pedido, nuevo_estado: "cancelado" },
+      };
+    } catch (error) {
+      console.error("[ServicePedidos:Cancelar] Error:", error.message);
+
+      // Manejo de errores específicos
+      if (error.message.includes("No se puede cancelar")) {
+        return { error: true, code: 409, message: error.message }; // 409 Conflict
+      }
+
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al cancelar el pedido.",
+      };
+    }
+  }
 }
