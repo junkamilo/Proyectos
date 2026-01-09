@@ -6,7 +6,7 @@ import { Package, Truck, CheckCircle, AlertCircle, Calendar, Loader2 } from "luc
 
 import type { Pedido } from "../types/pedidos"
 import { getHistorialPedidos } from "../action/pedidos.service"
-import { OrderDetailsModal } from "./OrderDetailsModal"
+import { OrderDetailsModal } from "./OrderDetails/OrderDetailsModal"
 
 
 // --- Helper para estilos de estado ---
