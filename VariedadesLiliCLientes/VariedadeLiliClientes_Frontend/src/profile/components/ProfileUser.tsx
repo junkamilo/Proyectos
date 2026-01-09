@@ -1,6 +1,5 @@
-import {
-    Shield,
-} from "lucide-react"
+import { useEffect, useState } from "react"
+import { Shield } from "lucide-react"
 
 // Importaciones de Shadcn UI
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,10 +13,11 @@ import { UserSidebar } from "./UserSidebar"
 import { HeaderDesktop } from "./HeaderDesktop"
 import { PestañasLista } from "./PestañasLista"
 import { GeneralTab } from "./GeneralTab"
-import { PedidosTab } from "./PedidosTab" // <--- IMPORTAMOS EL NUEVO COMPONENTE AQUÍ
+import { PedidosTab } from "./PedidosTab"
+import { getStoredUserId } from "../utils/auth-storage"
 
-// --- SUB-COMPONENTE LOCAL (Dejamos Notificaciones aquí por ahora) ---
 
+// --- SUB-COMPONENTE LOCAL: Notificaciones ---
 const NotificationsTab = () => (
     <Card className="border-none shadow-sm bg-white dark:bg-slate-900 rounded-3xl">
         <CardHeader>
@@ -46,12 +46,35 @@ const NotificationsTab = () => (
 
 export default function ProfilePage() {
 
-    // Data básica para los contadores de las pestañas
+    // 1. ESTADO PARA EL ID DEL USUARIO
+    const [userId, setUserId] = useState<string | number | null>(null);
+    const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+    // 2. EFECTO PARA LEER EL LOCALSTORAGE AL MONTAR
+    useEffect(() => {
+        // Usamos tu función getStoredUserId
+        const storedId = getStoredUserId();
+        
+        if (storedId) {
+            setUserId(Number(storedId)); // Convertimos a número si tu backend espera número
+        } else {
+            console.warn("⚠️ No se encontró usuario en sesión. Redirigiendo...");
+            // Opcional: window.location.href = '/login'; 
+        }
+        setIsAuthLoading(false);
+    }, []);
+
+    // Data básica para los contadores (Estos también podrías cargarlos dinámicamente luego)
     const userStats = {
         ordersCount: 3,
         wishlistCount: 12,
         notificationsCount: 5
     };
+
+    // Si aún está cargando la sesión, mostramos un spinner o nada
+    if (isAuthLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Cargando perfil...</div>;
+    }
 
     return (
         <div>
@@ -81,9 +104,15 @@ export default function ProfilePage() {
                                     <GeneralTab />
                                 </TabsContent>
 
-                                {/* Pestaña Pedidos - AQUI USAMOS EL NUEVO COMPONENTE */}
+                                {/* ✅ PESTAÑA PEDIDOS CON ID DINÁMICO */}
                                 <TabsContent value="orders" className="animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
-                                    <PedidosTab />
+                                    {userId ? (
+                                        <PedidosTab userId={userId} />
+                                    ) : (
+                                        <div className="p-8 text-center text-slate-500 border border-dashed rounded-xl">
+                                            Debes iniciar sesión para ver tus pedidos.
+                                        </div>
+                                    )}
                                 </TabsContent>
 
                                 {/* Pestaña Seguridad */}
