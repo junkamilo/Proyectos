@@ -31,19 +31,7 @@ export const PestañasLista = ({ stats = {} }: PestañasListaProps) => {
             icon: Heart,     // Cambiado a Heart que es más semántico para deseos
             label: "Lista de Deseos",
             count: stats.wishlistCount || 0
-        },
-        {
-            val: "security",
-            icon: Shield,
-            label: "Seguridad",
-            count: 0
-        },
-        {
-            val: "notifications",
-            icon: Bell,
-            label: "Avisos",
-            count: stats.notificationsCount || 0
-        },
+        }
     ];
 
     return (

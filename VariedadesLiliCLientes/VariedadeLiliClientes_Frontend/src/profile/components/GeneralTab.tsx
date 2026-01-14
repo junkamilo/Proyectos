@@ -1,30 +1,26 @@
-import { useQuery } from "@tanstack/react-query";
 import { User, Mail, Phone, Loader2 } from "lucide-react";
 
 // UI Components
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label"; // Verifica si es @radix-ui/react-label o tu ui/label
+import { Label } from "@/components/ui/label";
+import { useGeneralProfile } from "../hooks/useGeneralProfile";
 
-// Logic
-import { getUserProfile } from "../action/getUserProfile";
-import { getStoredUserId } from "../utils/auth-storage"; // Usa la utilidad que creamos antes
 
 export const GeneralTab = () => {
+    // Toda la lógica vive aquí 👇
+    const {
+        formData,
+        email,
+        isLoading,
+        isError,
+        isSaving,
+        handleChange,
+        handleSave
+    } = useGeneralProfile();
 
-    // 1. OBTENER ID DEL LOCALSTORAGE
-    const userId = getStoredUserId();
-
-    // 2. FETCH DATA CON REACT QUERY
-    const { data: cliente, isLoading, isError } = useQuery({
-        queryKey: ['user-profile', userId],
-        queryFn: () => getUserProfile(userId!),
-        enabled: !!userId,
-        staleTime: 1000 * 60 * 5, // 5 minutos de cache
-    });
-
-    // 3. ESTADO DE CARGA (Skeleton o Spinner)
+    // Renderizados condicionales simples
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -33,19 +29,9 @@ export const GeneralTab = () => {
         );
     }
 
-    // 4. MANEJO DE ERROR
-    if (isError || !cliente) {
+    if (isError) {
         return <div className="text-red-500">Error al cargar la información del usuario.</div>;
     }
-
-    // 5. LÓGICA PARA SEPARAR NOMBRE Y APELLIDO
-    // La BD devuelve "Juan Camilo Perez", aquí intentamos separarlo
-    const nombreCompleto = cliente.nombre_completo || "";
-    const partesNombre = nombreCompleto.split(" ");
-
-    // Tomamos el primer pedazo como nombre, y unimos el resto como apellido
-    const primerNombre = partesNombre[0] || "";
-    const apellidos = partesNombre.slice(1).join(" ") || "";
 
     return (
         <div className="space-y-6">
@@ -61,18 +47,20 @@ export const GeneralTab = () => {
                     {/* FILA 1: NOMBRE Y APELLIDO */}
                     <div className="grid gap-6 sm:grid-cols-2">
                         <div className="space-y-2">
-                            <Label htmlFor="firstName">Nombre</Label>
+                            <Label htmlFor="nombre">Nombre</Label>
                             <Input
-                                id="firstName"
-                                defaultValue={primerNombre} // Data real
+                                id="nombre"
+                                value={formData.nombre}
+                                onChange={handleChange}
                                 className="rounded-xl border-slate-200 focus-visible:ring-emerald-500 bg-slate-50/30"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="lastName">Apellido</Label>
+                            <Label htmlFor="apellido">Apellido</Label>
                             <Input
-                                id="lastName"
-                                defaultValue={apellidos} // Data real
+                                id="apellido"
+                                value={formData.apellido}
+                                onChange={handleChange}
                                 className="rounded-xl border-slate-200 focus-visible:ring-emerald-500 bg-slate-50/30"
                             />
                         </div>
@@ -86,28 +74,37 @@ export const GeneralTab = () => {
                                 <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                                 <Input
                                     id="email"
-                                    readOnly // Usualmente el email no se deja editar fácil
-                                    className="pl-10 rounded-xl border-slate-200 focus-visible:ring-emerald-500 bg-slate-100 text-slate-500 cursor-not-allowed"
-                                    defaultValue={cliente.email}
+                                    readOnly
+                                    value={email}
+                                    className="pl-10 rounded-xl border-slate-200 bg-slate-100 text-slate-500 cursor-not-allowed"
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="phone">Teléfono</Label>
+                            <Label htmlFor="telefono">Teléfono</Label>
                             <div className="relative">
                                 <Phone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                                 <Input
-                                    id="phone"
+                                    id="telefono"
+                                    value={formData.telefono}
+                                    onChange={handleChange}
                                     className="pl-10 rounded-xl border-slate-200 focus-visible:ring-emerald-500 bg-slate-50/30"
-                                    defaultValue={cliente.telefono || ""}
                                 />
                             </div>
                         </div>
                     </div>
 
                     <div className="pt-2 flex justify-end">
-                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-8 shadow-lg shadow-emerald-200 dark:shadow-none transition-all hover:-translate-y-0.5">
-                            Guardar Cambios
+                        <Button
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-8 shadow-lg shadow-emerald-200 dark:shadow-none transition-all hover:-translate-y-0.5 disabled:opacity-70"
+                        >
+                            {isSaving ? (
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Guardando...</>
+                            ) : (
+                                "Guardar Cambios"
+                            )}
                         </Button>
                     </div>
                 </CardContent>

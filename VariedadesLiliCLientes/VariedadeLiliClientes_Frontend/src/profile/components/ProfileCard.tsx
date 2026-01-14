@@ -1,12 +1,25 @@
-import { LogOut, Sparkles, Camera } from "lucide-react";
+import { useRef, useState } from "react"; // Hooks necesarios
+import { LogOut, Sparkles, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner"; // Notificaciones
 
-// Definimos la interfaz de lo que este componente NECESITA para vivir
+// Importar servicio y helper
+import { uploadProfileImage } from "../action/updateUserProfile";
+import { getStoredUserId } from "../utils/auth-storage"; // O como obtengas el ID
+
+// Helper para URLs (el que ya tienes)
+const fixImgUrl = (path?: string) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    return `http://localhost:3000${path}`;
+};
+
 interface ProfileCardProps {
     user: {
+        id?: number | string; // Asegúrate de tener el ID aquí
         name: string;
         email: string;
         avatar?: string;
@@ -14,7 +27,7 @@ interface ProfileCardProps {
         tier: string;
         isActive: boolean;
         stats: {
-            orders: number;
+            orders: number; // Esto vendrá ahora real del backend
             memberSince: string;
         };
     };
@@ -22,16 +35,51 @@ interface ProfileCardProps {
 }
 
 export const ProfileCard = ({ user, onLogout }: ProfileCardProps) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isUploading, setIsUploading] = useState(false);
+
+    // Función al hacer clic en el botón de cámara
+    const handleCameraClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    // Función cuando el usuario selecciona un archivo
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validaciones básicas
+        if (!file.type.startsWith("image/")) {
+            toast.error("Por favor sube un archivo de imagen válido.");
+            return;
+        }
+
+        // Obtener ID (desde props o storage)
+        const userId = user.id || getStoredUserId();
+        if (!userId) return;
+
+        setIsUploading(true);
+        try {
+            await uploadProfileImage(userId, file);
+            toast.success("Foto de perfil actualizada");
+
+            // Recargar para ver cambios (o usar QueryClient.invalidateQueries si usas React Query)
+            window.location.reload();
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     return (
         <aside className="sticky top-24 space-y-6">
             <Card className="border-none shadow-2xl shadow-stone-200/50 dark:shadow-none rounded-[2rem] overflow-hidden bg-white dark:bg-slate-950 relative group">
-                {/* ... Fondo ... */}
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none"></div>
 
                 <CardContent className="p-0">
                     {/* Header */}
                     <div className="h-40 bg-gradient-to-br from-emerald-800 via-teal-700 to-emerald-900 relative overflow-hidden">
-                        {/* ... Decoraciones ... */}
                         <div className="absolute top-5 right-5">
                             <Badge className="bg-white/20 text-white border-none backdrop-blur-md px-3 py-1.5">
                                 <Sparkles className="w-3 h-3 mr-2 text-yellow-300 fill-yellow-300" />
@@ -41,26 +89,43 @@ export const ProfileCard = ({ user, onLogout }: ProfileCardProps) => {
                     </div>
 
                     <div className="px-6 relative">
-                        {/* Avatar */}
+                        {/* Avatar Section */}
                         <div className="-mt-16 mb-4 flex justify-center">
                             <div className="relative group/avatar">
                                 <Avatar className="h-32 w-32 border-[6px] border-white dark:border-slate-950 shadow-xl bg-white">
-
-                                    {/* 1. Intenta mostrar la URL que calculamos con tu lógica */}
                                     <AvatarImage
-                                        src={user.avatar}
+                                        src={fixImgUrl(user.avatar)}
                                         alt={user.name}
-                                        className="object-cover"
+                                        className={`object-cover ${isUploading ? 'opacity-50' : ''}`}
                                     />
-
-                                    {/* 2. Si falla o no hay foto, muestra esto (Tus iniciales con fondo verde) */}
-                                    {/* Esto reemplaza a tu "ui-avatars.com" porque es nativo y más rápido */}
                                     <AvatarFallback className="text-4xl font-bold bg-emerald-100 text-emerald-800 flex items-center justify-center w-full h-full">
                                         {user.initials}
                                     </AvatarFallback>
 
+                                    {/* Loader si está subiendo */}
+                                    {isUploading && (
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+                                        </div>
+                                    )}
                                 </Avatar>
-                                <Button size="icon" className="absolute bottom-1 right-1 rounded-full h-10 w-10 shadow-lg border-4 border-white dark:border-slate-950 bg-slate-900 hover:bg-emerald-600 text-white transition-all hover:scale-110">
+
+                                {/* Input Oculto */}
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+
+                                {/* Botón Cámara */}
+                                <Button
+                                    size="icon"
+                                    onClick={handleCameraClick}
+                                    disabled={isUploading}
+                                    className="absolute bottom-1 right-1 rounded-full h-10 w-10 shadow-lg border-4 border-white dark:border-slate-950 bg-slate-900 hover:bg-emerald-600 text-white transition-all hover:scale-110 cursor-pointer"
+                                >
                                     <Camera className="h-4 w-4" />
                                 </Button>
                             </div>
@@ -77,7 +142,7 @@ export const ProfileCard = ({ user, onLogout }: ProfileCardProps) => {
                             </div>
                         </div>
 
-                        {/* Stats */}
+                        {/* Stats Reales (vienen de user.stats.orders del backend) */}
                         <div className="grid grid-cols-2 gap-3 mb-8">
                             <StatBox value={user.stats.orders} label="Pedidos" color="blue" />
                             <StatBox value={user.stats.memberSince} label="Desde" color="amber" />
@@ -96,7 +161,6 @@ export const ProfileCard = ({ user, onLogout }: ProfileCardProps) => {
     );
 };
 
-// Pequeño componente helper local para no repetir código
 const StatBox = ({ value, label, color }: { value: string | number, label: string, color: 'blue' | 'amber' }) => {
     const colors = {
         blue: "text-blue-600 bg-blue-50 dark:bg-blue-900/20",

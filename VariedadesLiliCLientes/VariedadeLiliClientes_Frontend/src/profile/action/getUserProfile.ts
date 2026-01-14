@@ -30,3 +30,13 @@ export const getUserProfile = async (id: string | number): Promise<Cliente> => {
         throw new Error(error.message);
     }
 };
+
+export const updateUserProfile = async (userId: string | number, data: { nombre: string, apellido: string, telefono: string }) => {
+    try {
+        const response = await profileApi.patch(`/perfil/${userId}`, data);
+        return response.data;
+    } catch (error: any) {
+        console.error("Error updating profile:", error);
+        throw new Error(error.response?.data?.message || "Error al actualizar");
+    }
+};
