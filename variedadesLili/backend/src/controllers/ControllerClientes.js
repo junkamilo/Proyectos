@@ -179,4 +179,38 @@ export class ControllerCliente {
       return ResponseProvider.error(res, "Error interno del servidor", 500);
     }
   };
+
+  static UpdateProfile = async (req, res) => {
+    try {
+      const { id } = req.params; // ID desde la URL
+      const { nombre, apellido, telefono } = req.body; // Datos del formulario
+
+      const response = await ServiceCliente.ActualizarPerfil(id, {
+        nombre,
+        apellido,
+        telefono,
+      });
+
+      if (response.error) {
+        return ResponseProvider.error(res, response.message, response.code);
+      }
+
+      return ResponseProvider.success(
+        res,
+        response.data,
+        response.message,
+        response.code
+      );
+    } catch (error) {
+      return ResponseProvider.error(res, "Error interno", 500);
+    }
+  };
+
+  static UploadPhoto = async (req, res) => {
+    const { id } = req.params;
+    const response = await ServiceCliente.ActualizarFoto(id, req.file);
+    if (response.error)
+      return ResponseProvider.error(res, response.message, response.code);
+    return ResponseProvider.success(res, response.data, response.message);
+  };
 }

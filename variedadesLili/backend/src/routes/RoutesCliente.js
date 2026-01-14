@@ -1,6 +1,7 @@
 import express from "express";
 import { uploadCliente, uploadUsuario } from "../middlewares/auth/uploadUsuario.js";
 import { ControllerCliente } from "../controllers/ControllerClientes.js";
+import { uploadPerfil } from "../middlewares/multer/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -13,9 +14,6 @@ router.post("/login", ControllerCliente.login);
 // Obtener todos los clientes
 router.get("/all", ControllerCliente.getAllClients);
 
-
-// --- RUTAS DINÁMICAS (Requieren ID, deben ir al final de los GETs) ---
-
 // Obtener un cliente específico por ID
 router.get("/:id", ControllerCliente.getClient);
 
@@ -24,5 +22,9 @@ router.put("/:id", uploadCliente.single("url_foto_perfil"), ControllerCliente.up
 
 // Eliminar cliente
 router.delete("/:id", ControllerCliente.deleteClient);
+
+router.patch("/perfil/:id", ControllerCliente.UpdateProfile);
+
+router.post("/perfil/foto/:id", uploadPerfil.single("foto"), ControllerCliente.UploadPhoto);
 
 export default router;

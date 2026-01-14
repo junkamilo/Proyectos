@@ -1,9 +1,8 @@
-import bcrypt from "bcryptjs"; 
-import jwt from "jsonwebtoken"; 
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { Cliente } from "../models/Cliente.js";
 
 export class ServiceCliente {
-  
   // --- OBTENER TODOS LOS CLIENTES ---
   static async getAllClients() {
     try {
@@ -58,7 +57,10 @@ export class ServiceCliente {
       }
 
       // 2. Comparar contraseñas
-      const passwordValid = await bcrypt.compare(contrasena, cliente.contrasena);
+      const passwordValid = await bcrypt.compare(
+        contrasena,
+        cliente.contrasena
+      );
 
       if (!passwordValid) {
         return { error: true, code: 401, message: "Credenciales incorrectas" };
@@ -135,12 +137,16 @@ export class ServiceCliente {
         message: "Cliente registrado exitosamente",
         data: {
           ...newCliente,
-          token, 
+          token,
         },
       };
     } catch (error) {
       console.error("[ServiceCliente:register] Error:", error);
-      return { error: true, code: 500, message: "Error al registrar el cliente" };
+      return {
+        error: true,
+        code: 500,
+        message: "Error al registrar el cliente",
+      };
     }
   }
 
@@ -194,6 +200,87 @@ export class ServiceCliente {
     } catch (error) {
       console.error("[ServiceCliente:updateClient] Error:", error);
       return { error: true, code: 500, message: "Error interno del servidor" };
+    }
+  }
+
+  static async ActualizarPerfil(id_cliente, { nombre, apellido, telefono }) {
+    try {
+      const datosParaActualizar = {};
+
+      // 1. Unir Nombre y Apellido si existen
+      if (nombre && apellido) {
+        datosParaActualizar.nombre_completo = `${nombre.trim()} ${apellido.trim()}`;
+      } else if (nombre) {
+        // Fallback si solo manda nombre
+        datosParaActualizar.nombre_completo = nombre.trim();
+      }
+
+      // 2. Agregar teléfono si existe
+      if (telefono) {
+        datosParaActualizar.telefono = telefono.trim();
+      }
+
+      // 3. Llamar al modelo
+      const result = await Cliente.updateClient(
+        id_cliente,
+        datosParaActualizar
+      );
+
+      if (result.affectedRows === 0) {
+        return {
+          error: true,
+          code: 404,
+          message: "Cliente no encontrado o sin cambios.",
+        };
+      }
+
+      return {
+        error: false,
+        code: 200,
+        message: "Datos actualizados correctamente.",
+        data: datosParaActualizar,
+      };
+    } catch (error) {
+      console.error("[ServiceCliente] Error:", error);
+      return { error: true, code: 500, message: "Error interno del servidor." };
+    }
+  }
+
+  static async GetPerfilCompleto(id_cliente) {
+    try {
+      const cliente = await Cliente.getByIdWithStats(id_cliente);
+      if (!cliente)
+        return { error: true, code: 404, message: "Cliente no encontrado" };
+
+      return { error: false, code: 200, data: cliente };
+    } catch (error) {
+      return { error: true, code: 500, message: "Error al obtener perfil" };
+    }
+  }
+
+  // Servicio para subir imagen
+  static async ActualizarFoto(id_cliente, file) {
+    if (!file)
+      return { error: true, code: 400, message: "No se subió ninguna imagen" };
+
+    // Generamos la URL relativa para guardar en BD
+    // Asegúrate de servir la carpeta 'uploads' como estática en tu app.js
+    const url_foto = `/uploads/perfiles/${file.filename}`;
+
+    try {
+      await Cliente.updatePhoto(id_cliente, url_foto);
+      return {
+        error: false,
+        code: 200,
+        message: "Foto actualizada",
+        data: { url: url_foto },
+      };
+    } catch (error) {
+      return {
+        error: true,
+        code: 500,
+        message: "Error al guardar en base de datos",
+      };
     }
   }
 }

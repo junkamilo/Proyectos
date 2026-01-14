@@ -1,5 +1,5 @@
 import db from "../utils/db.js";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 export class Cliente {
   // --- TRAER TODOS LOS CLIENTES ---
@@ -111,4 +111,64 @@ export class Cliente {
     );
     return result;
   }
+
+  static async updateClient(id_cliente, data) {
+    const connection = await db.getConnection();
+    try {
+      // data debe ser un objeto: { nombre_completo: '...', telefono: '...' }
+      const keys = Object.keys(data);
+      const values = Object.values(data);
+
+      if (keys.length === 0) return { affectedRows: 0 };
+
+      // Construimos la query dinámicamente: "UPDATE Clientes SET campo1=?, campo2=? WHERE id_cliente=?"
+      const setClause = keys.map((key) => `${key} = ?`).join(", ");
+      const sql = `UPDATE Clientes SET ${setClause} WHERE id_cliente = ?`;
+
+      // Agregamos el ID al final de los valores
+      const [result] = await connection.query(sql, [...values, id_cliente]);
+
+      return result;
+    } catch (error) {
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async getByIdWithStats(id_cliente) {
+    const connection = await db.getConnection();
+    try {
+      // Consulta 1: Datos del cliente
+      const [cliente] = await connection.query(
+        "SELECT id_cliente, nombre_completo, email, telefono, url_foto_perfil, estado, fecha_registro FROM Clientes WHERE id_cliente = ?",
+        [id_cliente]
+      );
+
+      if (cliente.length === 0) return null;
+
+      // Consulta 2: Conteo real de pedidos
+      const [pedidos] = await connection.query(
+        "SELECT COUNT(*) as total FROM Pedidos WHERE id_cliente = ?",
+        [id_cliente]
+      );
+
+      // Combinamos los datos
+      return {
+        ...cliente[0],
+        total_pedidos: pedidos[0].total, // Este es el dato real
+      };
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async updatePhoto(id_cliente, url_foto) {
+    const [result] = await db.query(
+      "UPDATE Clientes SET url_foto_perfil = ? WHERE id_cliente = ?",
+      [url_foto, id_cliente]
+    );
+    return result;
+  }
 }
+  

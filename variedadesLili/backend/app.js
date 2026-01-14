@@ -8,6 +8,7 @@ import RoutesProductos from "./src/routes/RoutesProductos.js";
 import RoutesCliente from "./src/routes/RoutesCliente.js";
 import RoutesCarrito from "./src/routes/RoutesCarShopoing.js";
 import RoutesPedido from "./src/routes/RoutesPedido.js";
+import RoutesFavoritesProductos from "./src/routes/RoutesFavoritesProductos.js";
 
 import path from "path";
 
@@ -33,6 +34,7 @@ app.use("/AddProductos", RoutesProductos);
 app.use("/api", RoutesCliente);
 app.use('/api/car', RoutesCarrito);
 app.use('/api/pedido', RoutesPedido);
+app.use('/api/favoritos', RoutesFavoritesProductos);
 
 // Puerto y arranque del servidor
 const PORT = process.env.PORT || 3000;
