@@ -16,6 +16,11 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10, // Máximo 10 conexiones simultáneas
   queueLimit: 0,
+  //ACTIVA LA CONEXIÓN SEGURA SSL
+  ssl: {
+    minVersion: "TLSv1.2",
+    rejectUnauthorized: true,
+  },
 });
 
 // Esto solo se imprimirá cuando se inicie el archivo, no garantiza conexión inmediata,
