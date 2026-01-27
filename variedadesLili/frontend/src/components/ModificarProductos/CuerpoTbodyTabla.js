@@ -1,4 +1,5 @@
 import { getAllProductosServices } from "../../services/Productos/productosServices";
+import API_URL from "../../utils/api";
 import { AsideDetallesProductos } from "./AsideDetallesProductos";
 import { AsideRenderizadoDetalles } from "./AsideRenderizadoDetalles";
 
@@ -58,7 +59,7 @@ export const CrearFilaProducto = (
   const img = document.createElement("img");
   // Ajusta la URL base según tu entorno
   img.src = url_foto_producto
-    ? `http://localhost:3000${url_foto_producto}`
+    ? `${API_URL}${url_foto_producto}`
     : "https://via.placeholder.com/64x64?text=Img";
   img.alt = nombre_producto;
   img.className =

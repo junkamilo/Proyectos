@@ -1,4 +1,5 @@
 import { editarUsuario } from "../../services/Users/authService";
+import API_URL from "../../utils/api";
 
 /**
  * Modal para editar usuario.
@@ -7,11 +8,6 @@ import { editarUsuario } from "../../services/Users/authService";
  * @param {Function} onClose - Callback para cerrar el modal (opcional si se maneja internamente).
  */
 export const ModalEditarUsuario = (usuario, onSave, onClose) => {
-  // -----------------------------------------------------------
-  // 1. DEFINIR URL BASE DEL SERVIDOR (No del endpoint /User)
-  // -----------------------------------------------------------
-  const SERVER_URL = "http://localhost:3000"; 
-
   // 1. BACKDROP
   const overlay = document.createElement("div");
   overlay.className =
@@ -81,7 +77,7 @@ export const ModalEditarUsuario = (usuario, onSave, onClose) => {
     } else {
       // Si viene de TU base de datos (ej: /uploads/usuarios/foto.jpg)
       // Concatenamos http://localhost:3000 + /uploads/...
-      imgPreview.src = `${SERVER_URL}${usuario.url_foto_perfil}`;
+      imgPreview.src = `${API_URL}${usuario.url_foto_perfil}`;
     }
   } else {
     // Avatar por defecto

@@ -1,9 +1,10 @@
-const API_URL = "http://localhost:3000/User";
+import API_URL from "../../utils/api";
+
 
 //iniciar sesion
 export const loginUser = async (identifier, contrasena) => {
   try {
-    const res = await fetch(`${API_URL}/login`, {
+    const res = await fetch(`${API_URL}/User/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +24,7 @@ export const loginUser = async (identifier, contrasena) => {
 //mostrar todos los usuarios
 export const getUsuarios = async () => {
   try {
-    const res = await fetch(`${API_URL}/all`);
+    const res = await fetch(`${API_URL}/User/all`);
     if (!res.ok) throw new Error("Error al obtener usuarios");
     const data = await res.json();
     return data.data || []; // asumimos que la respuesta viene en { data: [...] }
@@ -36,7 +37,7 @@ export const getUsuarios = async () => {
 // authService.js
 export const registerUser = async (formData) => {
   try {
-    const res = await fetch(`${API_URL}/register`, {
+    const res = await fetch(`${API_URL}/User/register`, {
       method: "POST",
       body: formData, // multipart/form-data automáticamente
     });
@@ -57,7 +58,7 @@ export const registerUser = async (formData) => {
 //eliminamos por usuario
 export const eliminarUsuario = async (id) => {
   try {
-    const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    const res = await fetch(`${API_URL}/User/${id}`, { method: "DELETE" });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Error al eliminar usuario");
     return data;
@@ -70,7 +71,7 @@ export const eliminarUsuario = async (id) => {
 //editamos usuarios
 export const editarUsuario = async (id, formData) => {
   try {
-    const res = await fetch(`${API_URL}/${id}`, {
+    const res = await fetch(`${API_URL}/User/${id}`, {
       method: "PUT",
       body: formData,
     });
@@ -90,7 +91,7 @@ export const getUserById = async (id) => {
     // 1. Es buena práctica enviar el token si la ruta es privada
     // const token = localStorage.getItem('token');
 
-    const res = await fetch(`${API_URL}/${id}`, {
+    const res = await fetch(`${API_URL}/User/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

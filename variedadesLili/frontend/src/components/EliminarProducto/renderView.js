@@ -1,5 +1,6 @@
 import { eliminarFilaProducto } from "../../helpers/helpersEliminarProducto/eliminarFilaProducto ";
 import { deleteProductoService } from "../../services/Productos/productosServices";
+import API_URL from "../../utils/api";
 
 export const renderView = (product, detailContent) => {
   // 🔥 ADAPTAMOS DIRECTO LAS PROPIEDADES (Lógica intacta)
@@ -7,7 +8,7 @@ export const renderView = (product, detailContent) => {
     id_producto: product.id_producto,
     nombre: product.nombre_producto,
     imagen:
-      product.imagen ?? `http://localhost:3000${product.url_foto_producto}`,
+      product.imagen ?? `${API_URL}${product.url_foto_producto}`,
     cantidad: product.cantidad,
     descripcion: product.descripcion,
     precio: product.precio,

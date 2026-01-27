@@ -2,6 +2,7 @@ import {
   editarUsuario,
   eliminarUsuario,
 } from "../../services/Users/authService";
+import API_URL from "../../utils/api";
 import { mostrarUserController } from "../../views/MostrarUsers/mostrarUserController";
 import { ModalEditarUsuario } from "../EditarUsuario/ModalEditarUsuario";
 
@@ -24,8 +25,6 @@ const getRoleStyle = (rol) => {
 // 2. COMPONENTE TARJETA DE USUARIO
 // ==========================================
 const UserCard = (usuario) => {
-  // 1. DEFINIMOS LA URL DEL SERVIDOR (Igual que en el Modal)
-  const SERVER_URL = "http://localhost:3000";
 
   const card = document.createElement("article");
   card.className =
@@ -47,7 +46,7 @@ const UserCard = (usuario) => {
       return u.url_foto_perfil;
     }
     // Si es ruta local de tu backend, concatenamos el servidor
-    return `${SERVER_URL}${u.url_foto_perfil}`;
+    return `${API_URL}${u.url_foto_perfil}`;
   };
 
   img.src = getAvatarUrl(usuario);

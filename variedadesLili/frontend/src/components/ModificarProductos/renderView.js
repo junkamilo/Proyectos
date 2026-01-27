@@ -1,4 +1,5 @@
 import { getEstadoClasses } from "../../helpers/ModificarProductos/getEstadoProductos.js";
+import API_URL from "../../utils/api.js";
 import { renderEdit } from "./renderEdit.js";
 
 export const renderView = (product, detailContent) => {
@@ -9,7 +10,7 @@ export const renderView = (product, detailContent) => {
     imagen:
       product.imagen ??
       (product.url_foto_producto
-        ? `http://localhost:3000${product.url_foto_producto}`
+        ? `${API_URL}${product.url_foto_producto}`
         : "https://via.placeholder.com/300x200?text=No+Img"),
     cantidad: product.cantidad ?? 0,
     descripcion: product.descripcion ?? "",

@@ -1,8 +1,8 @@
-const API_URL_GET_CLIENTES = "http://localhost:3000/api/all";
+import API_URL from "../../utils/api";
 
 export const getAllclientes = async () => {
   try {
-    const res = await fetch(API_URL_GET_CLIENTES);
+    const res = await fetch(`${API_URL}/api/all`);
     const responseData = await res.json(); // <-- Primero obtienes el JSON
 
     if (!res.ok) {

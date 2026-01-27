@@ -1,12 +1,10 @@
-const API_URL_ADD_PRODUCTOS = "http://localhost:3000/AddProductos/productos";
-const API_URL_GET_PRODUCTOS = "http://localhost:3000/AddProductos/productos";
-const API_URL_PUT_PRODUCTOS = "http://localhost:3000/AddProductos/productos/";
-const API_URL_DELETE_PRODUCTOS = "http://localhost:3000/AddProductos/productos/";
+import API_URL from "../../utils/api";
+const API_URL_PRODUCTOS = "/AddProductos/productos/"
 
 //agregamos productos
 export const agregarProductoService = async (formData) => {
   try {
-    const res = await fetch(API_URL_ADD_PRODUCTOS, {
+    const res = await fetch(`${API_URL}${API_URL_PRODUCTOS}`, {
       method: "POST",
       body: formData,
     });
@@ -26,7 +24,7 @@ export const agregarProductoService = async (formData) => {
 //Traemos todos los productos
 export const getAllProductosServices = async () => {
   try {
-    const res = await fetch(API_URL_GET_PRODUCTOS);
+    const res = await fetch(`${API_URL}${API_URL_PRODUCTOS}`);
     const responseData = await res.json(); // <-- Primero obtienes el JSON
 
     if (!res.ok) {
@@ -42,7 +40,7 @@ export const getAllProductosServices = async () => {
 //actualizamos un producto
 export const updateProductoService = async (id, formData) => {
   try {
-    const res = await fetch(`${API_URL_PUT_PRODUCTOS}${id}`, {
+    const res = await fetch(`${API_URL}${API_URL_PRODUCTOS}${id}`, {
       method: "PUT",
       body: formData,
     });
@@ -58,7 +56,7 @@ export const updateProductoService = async (id, formData) => {
 //eliminamos un producto
 export const deleteProductoService = async (id) => {
   try {
-    const res = await fetch(`${API_URL_DELETE_PRODUCTOS}${id}`, {
+    const res = await fetch(`${API_URL}${API_URL_PRODUCTOS}${id}`, {
       method: "DELETE",
     });
 

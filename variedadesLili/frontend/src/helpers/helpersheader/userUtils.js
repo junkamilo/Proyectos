@@ -1,4 +1,4 @@
-const SERVER_URL = "http://localhost:3000";
+import API_URL from "../../utils/api";
 const DEFAULT_IMG = "/assets/perfil.png";
 
 
@@ -30,7 +30,7 @@ export const obtenerUrlAvatar = (user) => {
   if (user.foto.startsWith("http")) return user.foto;
 
   // Si es local, concatenamos el servidor
-  return `${SERVER_URL}${user.foto}`;
+  return `${API_URL}${user.foto}`;
 };
 
 /**

@@ -1,9 +1,8 @@
-const API_URL_ALL_PEDIDOS = "http://localhost:3000/api/pedido/dashboard_todos";
-const API_URL_ESTADO_PEDIDOS = "http://localhost:3000/api/pedido/enviar/";
+import API_URL from "../../utils/api";
 
 export const getAllPedidosServices = async () => {
   try {
-    const res = await fetch(API_URL_ALL_PEDIDOS);
+    const res = await fetch(`${API_URL}/api/pedido/dashboard_todos`);
     const responseData = await res.json();
 
     if (!res.ok) {
@@ -27,7 +26,7 @@ export const postEstadosPedidoServices = async (idPedido) => {
   const idLimpio = idPedido.replace("ORD-", "");
 
   try {
-    const response = await fetch(`${API_URL_ESTADO_PEDIDOS}${idLimpio}`, {
+    const response = await fetch(`${API_URL}/api/pedido/enviar/${idLimpio}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

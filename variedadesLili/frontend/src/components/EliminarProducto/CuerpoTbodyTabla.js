@@ -2,6 +2,7 @@ import {
   deleteProductoService,
   getAllProductosServices,
 } from "../../services/Productos/productosServices";
+import API_URL from "../../utils/api";
 import { AsideDetallesProductos } from "./AsideDetallesProductos";
 import { AsideRenderizadoDetalles } from "./AsideRenderizadoDetalles";
 
@@ -108,7 +109,7 @@ export const CuerpoTbodyTabla = async (productos = []) => {
 
         const img = document.createElement("img");
         img.src = url_foto_producto
-          ? `http://localhost:3000${url_foto_producto}`
+          ? `${API_URL}${url_foto_producto}`
           : "https://via.placeholder.com/64x64?text=No+Img";
         img.alt = nombre_producto;
         img.className =

@@ -1,5 +1,6 @@
+import API_URL from "../../utils/api";
+
 export const AvatarFlotante = (usuario) => {
-  const SERVER_URL = "http://localhost:3000";
 
   
   const getAvatarUrl = (u) => {
@@ -19,7 +20,7 @@ export const AvatarFlotante = (usuario) => {
     // Si es una ruta local, pegarle el dominio del servidor
     // Aseguramos que no haya doble barra //
     const path = cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
-    return `${SERVER_URL}${path}`;
+    return `${API_URL}${path}`;
   };
   // --- Header Container ---
   const headerSection = document.createElement("header");
