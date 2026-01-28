@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getProductosPlantas } from '../actions/get-plantas';
+
 import type { Producto, ProductPlanta } from '../types/planta-interface';
 import api from '@/api/axios';
+import { getProductosPlantas } from '../api/plantas.api';
 
 
 export const usePlantasCatalog = () => {

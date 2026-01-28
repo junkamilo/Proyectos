@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query'
 import { Leaf, Box, Sprout, PiggyBank } from "lucide-react"
 
 // Importamos tus actions (Asegúrate que las rutas sean correctas)
-import { getProductosPlantas } from "@/plantas/actions/get-plantas"
+
 import { getProductosMateros } from "@/materos/actions/get-materos"
 import { getProductosAbono } from "@/abono/actions/get-abono"
 import { getProductosAlcancia } from "@/alcancia/action/get-alcancia"
+import { getProductosPlantas } from '@/plantas/api/plantas.api'
 
 export const useCategoriesSection = () => {
 

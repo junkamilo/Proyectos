@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Asegúrate de que esta acción acepte un string como parámetro
-import { getProductosPlantas } from '@/plantas/actions/get-plantas'; 
+
 // Importa tus interfaces. Si todos los productos tienen la misma estructura, usa la misma interfaz.
 import type { Producto, ProductPlanta } from '@/plantas/types/planta-interface';
 import api from '@/api/axios';
+import { getProductosPlantas } from '@/plantas/api/plantas.api';
 
 // 1. RECIBIMOS LA CATEGORÍA COMO ARGUMENTO
 export const useCatalog = (categoria: string) => {
