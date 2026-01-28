@@ -14,57 +14,57 @@ import { userRegisterController } from "../views/UsuariosRegistrados/userRegiste
 
 const routes = {
   "/": {
-    template: "MenuPrincipal/menuPrincipal.html",
+    template: "/MenuPrincipal/menuPrincipal.html",
     controlador: menuPrincipalController,
     private: true,
   },
   Login: {
-    template: "Login/login.html",
+    template: "/Login/login.html",
     controlador: LoginController,
     private: false,
   },
   AgregarProductos: {
-    template: "AgregarProductos/AgregarProductos.html",
+    template: "/AgregarProductos/AgregarProductos.html",
     controlador: AgregarProductosController,
     private: true,
   },
   AgregarUser: {
-    template: "AgregarUser/AgregarUser.html",
+    template: "/AgregarUser/AgregarUser.html",
     controlador: AgregarUserController,
     private: true,
   },
   MostrarUsers: {
-    template: "MostrarUsers/mostrarUser.html",
+    template: "/MostrarUsers/mostrarUser.html",
     controlador: mostrarUserController,
     private: true,
   },
   ProFileView: {
-    template: "UserProfile/userProfile.html",
+    template: "/UserProfile/userProfile.html",
     controlador: userProfileController,
     private: true,
   },
   UserRegisters: {
-    template: "UsuariosRegistrados/userRegister.html",
+    template: "/UsuariosRegistrados/userRegister.html",
     controlador: userRegisterController,
     private: true,
   },
   EliminarProductos: {
-    template: "EliminarProductos/EliminarProductos.html",
+    template: "/EliminarProductos/EliminarProductos.html",
     controlador: EliminarProductosController,
     private: true,
   },
   Inventario: {
-    template: "Inventario/Inventario.html",
+    template: "/Inventario/Inventario.html",
     controlador: InventarioController,
     private: true,
   },
   ModificarProductos: {
-    template: "ModificarProductos/ModificarProductos.html",
+    template: "/ModificarProductos/ModificarProductos.html",
     controlador: ModificarProductosController,
     private: true,
   },
   Pedidos: {
-    template: "Pedidos/Pedidos.html",
+    template: "/Pedidos/Pedidos.html",
     controlador: PedidosController,
     private: true,
   },
@@ -76,7 +76,7 @@ export const router = async (app) => {
 
   if (!rutas) {
     app.className = "";
-    await loadView(app, "MenuPrincipal/menuPrincipal.html");
+    await loadView(app, "/MenuPrincipal/menuPrincipal.html");
     menuPrincipalController();
     return;
   }
