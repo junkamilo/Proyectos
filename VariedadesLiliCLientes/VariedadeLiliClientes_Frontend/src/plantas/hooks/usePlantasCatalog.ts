@@ -2,9 +2,8 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getProductosPlantas } from '../actions/get-plantas';
 import type { Producto, ProductPlanta } from '../types/planta-interface';
+import api from '@/api/axios';
 
-// URL base (Ajusta si es necesario)
-const BASE_URL = 'http://localhost:3000';
 
 export const usePlantasCatalog = () => {
     // 1. ESTADOS
@@ -37,7 +36,7 @@ export const usePlantasCatalog = () => {
 
                 // Url Imagen (con corrección de localhost)
                 image: item.url_foto_producto
-                    ? (item.url_foto_producto.startsWith('http') ? item.url_foto_producto : `${BASE_URL}${item.url_foto_producto}`)
+                    ? (item.url_foto_producto.startsWith('http') ? item.url_foto_producto : `${api}${item.url_foto_producto}`)
                     : "/placeholder.png",
 
                 description: item.descripcion || "",

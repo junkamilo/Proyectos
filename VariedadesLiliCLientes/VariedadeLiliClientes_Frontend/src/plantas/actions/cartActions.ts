@@ -1,7 +1,5 @@
+import api from "@/api/axios";
 import axios from "axios";
-
-// Asegúrate de que apunte a tu backend
-const API_URL = 'http://localhost:3000/api';
 
 export const addToCartAction = async ({ 
     id_cliente, 
@@ -14,7 +12,7 @@ export const addToCartAction = async ({
 }) => {
     
     // Petición POST al endpoint que creamos y probamos en Postman
-    const response = await axios.post(`${API_URL}/car/add`, {
+    const response = await axios.post(`${api}/api/car/add`, {
         id_cliente,
         id_producto,
         cantidad

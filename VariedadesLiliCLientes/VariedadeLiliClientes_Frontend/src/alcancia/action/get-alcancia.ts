@@ -1,7 +1,6 @@
+import api from "@/api/axios";
 import { alcancia } from "../api/alcancia.api";
 import type { ProductosResponse } from "../types/get-alcancia-response";
-
-const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getProductosAlcancia = async () => {
 
@@ -27,7 +26,7 @@ export const getProductosAlcancia = async () => {
                 id: producto.id_producto,
                 name: producto.nombre_producto,
                 price: parseFloat(producto.precio),
-                image: `${BASE_URL}${producto.url_foto_producto}`,
+                image: `${api}${producto.url_foto_producto}`,
                 category: producto.categoria,
 
                 // Mapeamos material a "Type"

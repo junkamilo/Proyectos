@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 // Importamos tipos
 import { addToCartAction } from "@/plantas/actions/cartActions";
 import type { FavoriteProduct } from "../types/get-response-favorite";
+import api from "@/api/axios";
 
 // Helpers
 const formatPrice = (price: number) => 
@@ -19,7 +20,7 @@ const formatPrice = (price: number) =>
 const fixImgUrl = (path?: string) => {
     if (!path) return "/placeholder.svg";
     if (path.startsWith("http")) return path;
-    return `http://localhost:3000${path}`;
+    return `${api}${path}`;
 };
 
 interface WishlistCardProps {

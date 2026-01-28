@@ -12,7 +12,7 @@ export const useCategoriesSection = () => {
     // 1. DATA FETCHING (Paralelo)
     const { data: plantas = [], isLoading: loadingPlantas } = useQuery({
         queryKey: ['home-plantas'],
-        queryFn: getProductosPlantas,
+        queryFn: () => getProductosPlantas(),
         staleTime: 1000 * 60 * 10,
     })
 

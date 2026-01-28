@@ -4,8 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getProductosPlantas } from '@/plantas/actions/get-plantas'; 
 // Importa tus interfaces. Si todos los productos tienen la misma estructura, usa la misma interfaz.
 import type { Producto, ProductPlanta } from '@/plantas/types/planta-interface';
-
-const BASE_URL = 'http://localhost:3000';
+import api from '@/api/axios';
 
 // 1. RECIBIMOS LA CATEGORÍA COMO ARGUMENTO
 export const useCatalog = (categoria: string) => {
@@ -35,7 +34,7 @@ export const useCatalog = (categoria: string) => {
                 name: item.nombre_producto,
                 price: parseFloat(item.precio) || 0,
                 image: item.url_foto_producto
-                    ? (item.url_foto_producto.startsWith('http') ? item.url_foto_producto : `${BASE_URL}${item.url_foto_producto}`)
+                    ? (item.url_foto_producto.startsWith('http') ? item.url_foto_producto : `${api}${item.url_foto_producto}`)
                     : "/placeholder.png",
                 description: item.descripcion || "",
                 category: item.categoria,

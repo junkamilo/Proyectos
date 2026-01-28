@@ -1,9 +1,10 @@
+import api from "@/api/axios";
 import { abono } from "../api/abono.api";
 import type { ProductosResponse } from "../types/get-abono-response";
 
 
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+//const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getProductosAbono = async () => {
 
@@ -23,7 +24,7 @@ export const getProductosAbono = async () => {
                 id: producto.id_producto,
                 name: producto.nombre_producto,
                 price: parseFloat(producto.precio), // Convertimos string a number
-                image: `${BASE_URL}${producto.url_foto_producto}`,
+                image: `${api}${producto.url_foto_producto}`,
                 category: producto.categoria,
                 // Aquí mapeamos el material de la BD al "type" del frontend
                 type: producto.material || "Cerámica",

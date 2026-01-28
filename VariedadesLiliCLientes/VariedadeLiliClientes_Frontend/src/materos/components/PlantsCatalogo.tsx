@@ -1,8 +1,6 @@
 import { useState } from "react"
 import { Box } from "lucide-react"
 
-// 1. Importamos los Componentes Reutilizables
-import { ProductCard } from "@/components/common/ProductCard" // <--- Tu tarjeta principal
 import { BarraControl } from "@/components/common/BarraControl"
 import { SidebarFilters } from "@/components/common/SidebarFilters"
 import { HeaderProducts } from "@/components/common/HeaderProducts/HeaderProduct"

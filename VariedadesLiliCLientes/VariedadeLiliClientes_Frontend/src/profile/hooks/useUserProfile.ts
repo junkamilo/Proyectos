@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { getStoredUserId, clearSession } from "../utils/auth-storage";
 import { getUserProfile } from "../action/getUserProfile";
-// Verifica la ruta de importación
-
-// 1. DEFINIMOS LA URL DEL BACKEND FIJA (Para asegurar que funcione)
-const BACKEND_URL = 'http://localhost:3000';
+import api from "@/api/axios";
 
 export const useUserProfile = () => {
     const userId = getStoredUserId();
@@ -32,7 +29,7 @@ export const useUserProfile = () => {
             }
             // Si es relativa (/uploads...), LE PEGAMOS EL DOMINIO DEL BACKEND
             else {
-                finalAvatarUrl = `${BACKEND_URL}${cliente.url_foto_perfil}`;
+                finalAvatarUrl = `${api}${cliente.url_foto_perfil}`;
             }
         }
 

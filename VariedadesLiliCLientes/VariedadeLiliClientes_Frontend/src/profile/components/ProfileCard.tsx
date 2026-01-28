@@ -9,12 +9,13 @@ import { toast } from "sonner"; // Notificaciones
 // Importar servicio y helper
 import { uploadProfileImage } from "../action/updateUserProfile";
 import { getStoredUserId } from "../utils/auth-storage"; // O como obtengas el ID
+import api from "@/api/axios";
 
 // Helper para URLs (el que ya tienes)
 const fixImgUrl = (path?: string) => {
     if (!path) return "";
     if (path.startsWith("http")) return path;
-    return `http://localhost:3000${path}`;
+    return `${api}${path}`;
 };
 
 interface ProfileCardProps {
