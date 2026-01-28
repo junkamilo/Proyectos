@@ -1,17 +1,23 @@
 import api from "@/api/axios";
-import { materos } from "../api/matero.api";
-import type { ProductosResponse } from "../types/get-matero-response";
+// Asegúrate de tener definidos los tipos o usa 'any' si estás probando
+import type { ProductosResponse } from "../types/get-matero-response"; 
+
+// Necesitamos la URL base como TEXTO para las imágenes, no la instancia de Axios
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://variedadeslilibackend.onrender.com';
 
 export const getProductosMateros = async () => {
 
-    // 1. Llamamos al endpoint que trae TODOS los productos
-    const { data: apiResponse } = await materos.get<ProductosResponse>('/productos');
+    // 1. Llamamos a la ruta CORRECTA (la suma de /AddProductos + /productos)
+    const { data: apiResponse } = await api.get<ProductosResponse>('/AddProductos/productos');
 
-    // 2. Filtramos y transformamos
-    const soloMateros = apiResponse.data
-        // FILTRO: Solo dejamos pasar lo que sea categoria "materos" o "alcancia" si deseas incluirlas aquí
-        // Nota: Asegúrate que en tu BD la categoría esté escrita exacta (ej: "alcancia" o "materos")
-        .filter(producto =>
+    // 2. Obtenemos el array crudo desde la respuesta del backend
+    // (Recuerda que tu backend devuelve { status, message, data: [] })
+    const listaProductos = apiResponse.data || [];
+
+    // 3. Filtramos y transformamos
+    const soloMateros = listaProductos
+        // FILTRO: Solo dejamos pasar categoría "materos"
+        .filter(producto => 
             producto.categoria.toLowerCase() === 'materos'
         )
         // MAPEO
@@ -20,16 +26,16 @@ export const getProductosMateros = async () => {
                 id: producto.id_producto,
                 name: producto.nombre_producto,
                 price: parseFloat(producto.precio), // Convertimos string a number
-                image: `${api}${producto.url_foto_producto}`,
+                
+                // ⚠️ CORRECCIÓN DE IMAGEN: Usamos la URL de texto, no el objeto axios
+                image: `${BASE_URL}${producto.url_foto_producto}`,
+                
                 category: producto.categoria,
-                // Aquí mapeamos el material de la BD al "type" del frontend
                 type: producto.material || "Cerámica",
 
-                // --- DATOS SIMULADOS (Para que funcionen los filtros visuales) ---
+                // --- DATOS SIMULADOS ---
                 rating: (Math.random() * (5 - 4) + 4).toFixed(1),
-                // Simulamos resistencia basada en material si fuera real, por ahora random
                 difficulty: Math.random() > 0.5 ? "Fácil" : "Medio",
-                // Simulamos ubicación
                 light: Math.random() > 0.5 ? "Luz indirecta" : "Sombra",
                 inStock: producto.cantidad,
                 isNew: Math.random() > 0.7
