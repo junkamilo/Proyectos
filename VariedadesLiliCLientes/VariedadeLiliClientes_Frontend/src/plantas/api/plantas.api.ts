@@ -16,7 +16,7 @@ export const getProductosPlantas = async (categoria?: string): Promise<Producto[
 
     // 2. Hacemos la petición GET usando la instancia 'api' principal
     // ⚠️ Importante: Usamos la ruta '/AddProductos' porque así la tienes en tu backend.
-    const { data } = await api.get<ProductosResponse>('/AddProductos', { params });
+    const { data } = await api.get<ProductosResponse>('/AddProductos/productos', { params });
 
     // 3. Retornamos el array de productos. 
     // data.data accede al array dentro de tu respuesta JSON { status, message, data: [...] }
