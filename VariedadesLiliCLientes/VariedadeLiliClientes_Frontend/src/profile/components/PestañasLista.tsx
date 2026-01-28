@@ -1,5 +1,5 @@
 import { TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User, Package, Shield, Bell, Heart } from "lucide-react"
+import { User, Package, Heart } from "lucide-react"
 
 // Definimos la interfaz de las props que recibirá el componente
 interface PestañasListaProps {

@@ -18,8 +18,6 @@ interface BarraControlProps {
 export const BarraControl = ({
     searchTerm,
     setSearchTerm,
-    sortBy,
-    setSortBy,
     showFilters,
     setShowFilters,
     viewMode,
